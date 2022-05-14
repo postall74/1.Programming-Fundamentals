@@ -50,6 +50,7 @@ namespace Dynamic_array_advanced
         static void AddToList (List<int> list, string userInput)
         {
             int number;
+
             if (int.TryParse(userInput, out number) == true)
             {
                 list.Add(number);
