@@ -52,6 +52,7 @@ namespace Queue_at_the_store
             }
             return shoppingQueue;
         }
+
         static bool CashBox(Queue<int> queue, ref int cashBox)
         {
             bool isExit = false;
