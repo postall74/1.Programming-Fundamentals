@@ -5,7 +5,7 @@ namespace Queue_at_the_store
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.CursorVisible = false;
             Queue<int> shoppingQueue = new Queue<int>();
@@ -33,7 +33,7 @@ namespace Queue_at_the_store
             }
         }
 
-        static void FillShoppingQueue(Queue<int> queue, int maximalLength, int maximalSummShopping, Random random)
+        private static void FillShoppingQueue(Queue<int> queue, int maximalLength, int maximalSummShopping, Random random)
         {
             for (int i = 0; i < random.Next(maximalLength); i++)
             {
@@ -41,10 +41,8 @@ namespace Queue_at_the_store
             }
         }
 
-        static void PaymentForPurchase(Queue<int> queue, ref int cashBox, ref bool isCloseCashBox)
+        private static void PaymentForPurchase(Queue<int> queue, ref int cashBox, ref bool isCloseCashBox)
         {
-            isCloseCashBox = false;
-
             if (queue.Count == 1)
             {
                 isCloseCashBox = true;
