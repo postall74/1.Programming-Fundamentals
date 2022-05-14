@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boss fight", "Boss fight.csproj", "{B62EEC17-B324-494F-A93C-3E881456FB99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B62EEC17-B324-494F-A93C-3E881456FB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62EEC17-B324-494F-A93C-3E881456FB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62EEC17-B324-494F-A93C-3E881456FB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62EEC17-B324-494F-A93C-3E881456FB99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4E9FA2E-CC12-4548-9F7B-85A4E752A56A}
+	EndGlobalSection
+EndGlobal
