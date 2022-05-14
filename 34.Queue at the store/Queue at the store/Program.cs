@@ -11,16 +11,11 @@ namespace Queue_at_the_store
             Queue<int> shoppingQueue = new Queue<int>();
             int cashBox = 0;
             shoppingQueue = FillShoppingQueue();
+            bool isExit = false;
 
-            while (shoppingQueue.Count > -1)
+            while (isExit == false)
             {
                 Console.Clear();
-
-                if (shoppingQueue.Count == 0)
-                {
-                    Console.WriteLine($"Очередь пуста! Сумма денег в кассе ровна {cashBox}.");
-                    break;
-                }
                 Console.SetCursorPosition(0, 1);
                 Console.WriteLine("Очередь покупок:");
 
@@ -28,10 +23,9 @@ namespace Queue_at_the_store
                 {
                     Console.WriteLine(summQueue);
                 }
-
                 Console.WriteLine($"\nСледующая покупка будет на сумму - {shoppingQueue.Peek()}");
                 Console.SetCursorPosition(0, 0);
-                CashBox(shoppingQueue,ref cashBox);
+                isExit = CashBox(shoppingQueue, ref cashBox);
                 Console.ReadKey(true);
             }
         }
@@ -58,12 +52,30 @@ namespace Queue_at_the_store
             }
             return shoppingQueue;
         }
-        static void CashBox(Queue<int> queue, ref int cashBox)
+        static bool CashBox(Queue<int> queue, ref int cashBox)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write($"Денег в кассе - {cashBox}");
-            Console.ForegroundColor = ConsoleColor.White;
-            cashBox += queue.Dequeue();
+            bool isExit = false;
+
+            if (queue.Count == 1)
+            {
+                isExit = true;
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"Денег в кассе - {cashBox}");
+                Console.ForegroundColor = ConsoleColor.White;
+                cashBox += queue.Dequeue();
+                Console.ReadKey(true);
+                Console.Clear();
+                Console.WriteLine($"Очередь пуста! Сумма денег в кассе ровна {cashBox}.");
+            }
+            else
+            {
+                isExit = false;
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"Денег в кассе - {cashBox}");
+                Console.ForegroundColor = ConsoleColor.White;
+                cashBox += queue.Dequeue();
+            }
+            return isExit;
         }
     }
 }
