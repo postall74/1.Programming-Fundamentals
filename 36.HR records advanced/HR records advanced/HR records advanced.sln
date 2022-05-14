@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR records advanced", "HR records advanced.csproj", "{F9A2B669-17B5-44E2-AEDE-75C39F8A259F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9A2B669-17B5-44E2-AEDE-75C39F8A259F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9A2B669-17B5-44E2-AEDE-75C39F8A259F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9A2B669-17B5-44E2-AEDE-75C39F8A259F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9A2B669-17B5-44E2-AEDE-75C39F8A259F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC60C8D6-5A19-438B-B4C7-DBCEF4DE2C4F}
+	EndGlobalSection
+EndGlobal
