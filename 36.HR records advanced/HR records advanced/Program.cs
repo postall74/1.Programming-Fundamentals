@@ -56,7 +56,15 @@ namespace HR_records_advanced
             fullName = Console.ReadLine();
             Console.Write("Введите должность сотрудника - ");
             position = Console.ReadLine();
-            dictionary.Add(fullName, position);
+
+            if (dictionary.ContainsKey(fullName) == false)
+            {
+                dictionary.Add(fullName, position);
+            }
+            else
+            {
+                Console.WriteLine("Сотрудник с таким именем уже есть!");
+            }
         }
 
         static void PrintAllDosiers(Dictionary<string, string> dictionary)
