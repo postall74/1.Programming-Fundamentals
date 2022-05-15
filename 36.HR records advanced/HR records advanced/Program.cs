@@ -26,7 +26,7 @@ namespace HR_records_advanced
                         Supplement(humanResourceRecords);
                         break;
                     case 2:
-                        PrintAllDosiers(humanResourceRecords);
+                        ShowAllDosiers(humanResourceRecords);
                         break;
                     case 3:
                         RemoveDosier(humanResourceRecords);
@@ -67,7 +67,7 @@ namespace HR_records_advanced
             }
         }
 
-        static void PrintAllDosiers(Dictionary<string, string> dictionary)
+        static void ShowAllDosiers(Dictionary<string, string> dictionary)
         {
             foreach (var item in dictionary)
             {
