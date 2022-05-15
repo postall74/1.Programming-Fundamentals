@@ -26,10 +26,7 @@ namespace HR_records_advanced
                         Supplement(humanResourceRecords);
                         break;
                     case 2:
-                        foreach (var item in humanResourceRecords)
-                        {
-                            Console.WriteLine($"{item.Key} - {item.Value}");
-                        }
+                        PrintAllDosiers(humanResourceRecords);
                         break;
                     case 3:
                         RemoveDosier(humanResourceRecords);
@@ -60,6 +57,14 @@ namespace HR_records_advanced
             Console.Write("Введите должность сотрудника - ");
             position = Console.ReadLine();
             dictionary.Add(fullName, position);
+        }
+
+        static void PrintAllDosiers(Dictionary<string, string> dictionary)
+        {
+            foreach (var item in dictionary)
+            {
+                Console.WriteLine($"{item.Key} - {item.Value}");
+            }
         }
 
         static void RemoveDosier(Dictionary<string, string> dictionary)
