@@ -11,7 +11,7 @@ namespace Working_with_classes
         static void Main(string[] args)
         {
             Player player = new Player("Jon", 100, 10, 25);
-            player.ShowInfoPlayer();
+            player.ShowInfo();
         }
     }
 
@@ -30,7 +30,7 @@ namespace Working_with_classes
             _damage = damage;
         }
 
-        public void ShowInfoPlayer()
+        public void ShowInfo()
         {
             Console.WriteLine($"Имя персонажа - {_name}\n\t-\nПоказатели:\nЖизни - {_health}\nБроня - {_armor}\nАтака - {_damage}");
         }
