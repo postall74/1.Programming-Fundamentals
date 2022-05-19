@@ -12,31 +12,30 @@ namespace Working_with_propertie
         {
             Player player = new Player(5, 10);
             Render render = new Render();
-            render.DrawPlayer(player.X, player.Y, '*');
+            render.DrawPlayer(player.X, player.Y, player.Simbol);
         }
     }
 
     public class Player
     {
-        private int _x;
-        private int _y;
-
         public int X { get; private set; }
         public int Y { get; private set; }
+        public char Simbol { get; private set; }
 
-        public Player(int x, int y)
+        public Player(int x, int y, char simbol = '@')
         { 
             X = x;
             Y = y;
+            Simbol = simbol;
         }
     }
 
     public class Render
     { 
-        public void DrawPlayer (int x, int y, char playerSymbol = '@')
+        public void DrawPlayer (int positionX, int positionY, char symbol)
         {
-            Console.SetCursorPosition(x, y);
-            Console.Write(playerSymbol);
+            Console.SetCursorPosition(positionX, positionY);
+            Console.Write(symbol);
         }
     }
 }
