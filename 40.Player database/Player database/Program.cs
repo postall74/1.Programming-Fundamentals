@@ -58,7 +58,6 @@ namespace Player_database
                 }
                 Console.ReadKey(true);
             }
-
         }
     }
 
