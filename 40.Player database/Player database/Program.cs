@@ -132,18 +132,11 @@ namespace Player_database
             string name = Console.ReadLine();
             Console.Write("Enter level player - ");
             int level;
-
-            if (int.TryParse(Console.ReadLine(), out level) == true)
-            {
-                Player player = new Player(name, level);
-                List<Player> players = _players;
-                players.Add(player);
-                _players = players;
-            }
-            else
-            {
-                Console.WriteLine("Try again");
-            }
+            TryGetPlayer(out level);
+            Player player = new Player(name, level);
+            List<Player> players = _players;
+            players.Add(player);
+            _players = players;
         }
 
         public void Delete()
@@ -151,66 +144,57 @@ namespace Player_database
             ShowAll();
             Console.Write("Enter ID player who need delete - ");
             int id;
-
-            if (int.TryParse(Console.ReadLine(), out id) == true)
-            {
-                List<Player> players = _players;
-                players.Remove(players.Find(x => x.Id == id));
-                _players = players;
-            }
-            else
-            {
-                Console.WriteLine($"There is no player with this {id}");
-            }
+            TryGetPlayer(out id);
+            List<Player> players = _players;
+            players.Remove(players.Find(x => x.Id == id));
+            _players = players;
         }
 
         public void SetBan()
         {
+            ShowAll();
             Console.Write("Enter ID player who need ban/unban - ");
             int id;
+            TryGetPlayer(out id);
+            List<Player> players = _players;
+            Player player = players.Find(x => x.Id == id);
 
-            if (int.TryParse(Console.ReadLine(), out id) == true)
+            if (player.IsBan == false)
             {
-                List<Player> players = _players;
-                Player player = players.Find(x => x.Id == id);
-                if (player.IsBan == false)
-                {
-                    player.SetBan(id);
-                }
-                else
-                {
-                    Console.WriteLine($"This player has banned!");
-                }
-                _players = players;
+                player.SetBan(id);
             }
             else
             {
-                Console.WriteLine($"There is no player with this {id}");
+                Console.WriteLine($"This player has banned!");
             }
+            _players = players;
         }
 
         public void SetUnban()
         {
+            ShowAll();
             Console.Write("Enter ID player who need ban/unban - ");
             int id;
+            TryGetPlayer(out id);
+            List<Player> players = _players;
+            Player player = players.Find(x => x.Id == id);
 
-            if (int.TryParse(Console.ReadLine(), out id) == true)
+            if (player.IsBan == true)
             {
-                List<Player> players = _players;
-                Player player = players.Find(x => x.Id == id);
-                if (player.IsBan == true)
-                {
-                    player.SetBan(id);
-                }
-                else
-                {
-                    Console.WriteLine($"This player has banned!");
-                }
-                _players = players;
+                player.SetBan(id);
             }
             else
             {
-                Console.WriteLine($"There is no player with this {id}");
+                Console.WriteLine($"This player has unbanned!");
+            }
+            _players = players;
+        }
+
+        private void TryGetPlayer(out int number)
+        {
+            if (int.TryParse(Console.ReadLine(), out number) == false)
+            {
+                Console.WriteLine($"There is no player with this {number}");
             }
         }
     }
