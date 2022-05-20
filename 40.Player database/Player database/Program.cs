@@ -64,10 +64,16 @@ namespace Player_database
         public bool IsBan { get; private set; }
         public int Id { get; private set; }
 
+
+
         public Player(string name, int level)
         {
             Name = name;
             Level = level;
+            Random random = new Random();
+            int id = random.Next();
+            Id = id;
+            System.Threading.Thread.Sleep(2);
         }
 
         public void SetBan(int id)
@@ -144,6 +150,7 @@ namespace Player_database
 
         public void Delete()
         {
+            ShowAll();
             Console.Write("Enter ID player who need delete - ");
             int id;
 
