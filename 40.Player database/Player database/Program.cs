@@ -64,8 +64,6 @@ namespace Player_database
         public bool IsBan { get; private set; }
         public int Id { get; private set; }
 
-
-
         public Player(string name, int level)
         {
             Name = name;
@@ -215,6 +213,5 @@ namespace Player_database
                 Console.WriteLine($"There is no player with this {id}");
             }
         }
-
     }
 }
