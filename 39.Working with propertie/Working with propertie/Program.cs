@@ -22,10 +22,10 @@ namespace Working_with_propertie
         public int Y { get; private set; }
         public char Simbol { get; private set; }
 
-        public Player(int x, int y, char simbol = '@')
+        public Player(int positionX, int positionY, char simbol = '@')
         { 
-            X = x;
-            Y = y;
+            X = positionX;
+            Y = positionY;
             Simbol = simbol;
         }
     }
