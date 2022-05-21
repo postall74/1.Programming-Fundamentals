@@ -60,10 +60,10 @@ namespace Card_deck
                         deck.Shuffle();
                         break;
                     case "3":
-                        deck.GetCard(player);
+                        deck.GiveCard(player);
                         break;
                     case "4":
-                        deck.GetCards(player);
+                        deck.GiveCards(player);
                         break;
                     case "5":
                         player.Show();
@@ -73,13 +73,7 @@ namespace Card_deck
                         Console.WriteLine("God bye!");
                         break;
                     default:
-                        Console.Clear();
-                        Console.WriteLine("Deck cards");
-                        Console.SetCursorPosition(0, 2);
-                        Console.WriteLine("1.Show the deck\n2.Suffle the deck\n3.Take on the card from deck\n" +
-                            "4.Teke several cards from the deck\n5.Show player card \n6.Exit");
-                        Console.SetCursorPosition(0, 11);
-                        userInput = Console.ReadLine();
+                        Console.WriteLine($"Retype the command");
                         break;
                 }
                 Console.ReadKey(true);
@@ -109,15 +103,7 @@ namespace Card_deck
             _deck = deck;
         }
 
-        private void TryGetInput(out int number)
-        {
-            if (int.TryParse(Console.ReadLine(), out number) == false)
-            {
-                Console.WriteLine($"You didn't enter a number");
-            }
-        }
-
-        public List<Card> CreateDeck()
+        public void CreateDeck()
         {
             int nameCards = 13;
             int suitCards = 4;
@@ -130,66 +116,96 @@ namespace Card_deck
                     _deck.Add(card);
                 }
             }
-            return _deck;
         }
-        public List<Card> Shuffle()
+        public void Shuffle()
         {
             Random random = new Random();
-            List<Card> tempDeck = new List<Card>(_deck);
 
             for (int i = _deck.Count - 1; i > 0; i--)
             {
                 int cardIndex = random.Next(i + 1);
-                Card tempCard = tempDeck[i];
-                tempDeck[i] = tempDeck[cardIndex];
-                tempDeck[cardIndex] = tempCard;
+                Card tempCard = _deck[i];
+                _deck[i] = _deck[cardIndex];
+                _deck[cardIndex] = tempCard;
             }
-            _deck = tempDeck;
-            return _deck;
         }
 
         public void Show()
         {
-            foreach (var card in _deck)
+            if (EmptyDeck() == false)
             {
-                Console.Write($"{card.Name} {card.Suit} | ");
+                foreach (var card in _deck)
+                {
+                    Console.Write($"{card.Name} {card.Suit} | ");
+                }
+                Console.WriteLine();
             }
-            Console.WriteLine();
         }
 
-        public Card GetCard(Player player)
+        public Card GiveCard(Player player)
         {
             Card card = null;
-            List<Card> tempDeck = _deck;
-            card = tempDeck.First();
-            tempDeck.Remove(card);
-            _deck = tempDeck;
-            player.TakeCard(card);
+
+            if (EmptyDeck() == false)
+            {
+                List<Card> tempDeck = _deck;
+                card = tempDeck.First();
+                tempDeck.Remove(card);
+                _deck = tempDeck;
+                player.TakeCard(card);
+            }
             return card;
         }
 
-        public List<Card> GetCards(Player player)
+        public List<Card> GiveCards(Player player)
         {
             List<Card> cards = new List<Card>();
-            List<Card> tempDeck = _deck;
-            int count;
-            Console.Write("Enter the number of cards you want to take - ");
-            TryGetInput(out count);
 
-            if (count > _deck.Count)
+            if (EmptyDeck() == false)
             {
-                Console.WriteLine($"The number of cards in the deck is less than what you ask for");
-            }
-            else
-            {
-                for (int i = 0; i < count; i++)
+                List<Card> tempDeck = _deck;
+                int count;
+                Console.Write("Enter the number of cards you want to take - ");
+                TryGet(out count);
+
+                if (_deck.Count >= count)
                 {
-                    cards.Add(GetCard(player));
+                    for (int i = 0; i < count; i++)
+                    {
+                        cards.Add(GiveCard(player));
+                    }
                 }
-                tempDeck.RemoveRange(0, cards.Count);
+                else
+                {
+                    Console.WriteLine($"The number of cards in the deck is less than what you ask for");
+                }
             }
             return cards;
         }
+
+        private void TryGet(out int number)
+        {
+            if (int.TryParse(Console.ReadLine(), out number) == false)
+            {
+                Console.WriteLine($"You didn't enter a number");
+            }
+        }
+
+        private bool EmptyDeck()
+        {
+            bool isEmpty;
+            if (_deck.Count <= 0)
+            {
+                Console.WriteLine($"Empty deck");
+                isEmpty = true;
+            }
+            else
+            {
+                isEmpty = false;
+            }
+            return isEmpty;
+        }
+
     }
 
     class Player
@@ -216,10 +232,28 @@ namespace Card_deck
 
         public void Show()
         {
-            foreach (var card in _cards)
+            if (EmptyDeck() == false)
             {
-                Console.Write($"{card.Name} {card.Suit} | ");
+                foreach (var card in _cards)
+                {
+                    Console.Write($"{card.Name} {card.Suit} | ");
+                }
             }
+        }
+
+        private bool EmptyDeck()
+        {
+            bool isEmpty;
+            if (_cards.Count <= 0)
+            {
+                Console.WriteLine($"Player's deck is empty");
+                isEmpty = true;
+            }
+            else
+            {
+                isEmpty = false;
+            }
+            return isEmpty;
         }
     }
 }
