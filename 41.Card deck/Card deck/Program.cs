@@ -165,29 +165,27 @@ namespace Card_deck
                 List<Card> tempDeck = _deck;
                 int count;
                 Console.Write("Enter the number of cards you want to take - ");
-                TryGet(out count);
 
-                if (_deck.Count >= count)
+                if (int.TryParse(Console.ReadLine(), out count) == false)
                 {
-                    for (int i = 0; i < count; i++)
-                    {
-                        cards.Add(GiveCard(player));
-                    }
+                    Console.WriteLine($"You didn't enter a number");
                 }
                 else
                 {
-                    Console.WriteLine($"The number of cards in the deck is less than what you ask for");
+                    if (_deck.Count >= count)
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
+                            cards.Add(GiveCard(player));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"The number of cards in the deck is less than what you ask for");
+                    }
                 }
             }
             return cards;
-        }
-
-        private void TryGet(out int number)
-        {
-            if (int.TryParse(Console.ReadLine(), out number) == false)
-            {
-                Console.WriteLine($"You didn't enter a number");
-            }
         }
 
         private bool EmptyDeck()
