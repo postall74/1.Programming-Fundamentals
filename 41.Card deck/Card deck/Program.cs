@@ -37,12 +37,45 @@ namespace Card_deck
         {
             Deck deck = new Deck(new List<Card> { });
             deck.CreateDeck();
-            deck.Show();
-            Console.WriteLine();
-            Card card = deck.TakeCard();
-            Console.WriteLine(card.Name + " " + card.Suit);
-            Console.WriteLine();
-            deck.Show();
+            bool isExit = false;
+
+            while (isExit == true)
+            {
+                Console.Clear();
+                Console.WriteLine("Deck cards");
+                Console.SetCursorPosition(0, 6);
+                Console.WriteLine("1.Show the deck\n2.Take on the card from deck\n3.Teke several cards from the deck\n4.Show player card \n5.Exit");
+                string userInput;
+                Console.SetCursorPosition(0, 11);
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        deck.Show();
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "5":
+                        isExit = true;
+                        Console.WriteLine("God bye!");
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Deck cards");
+                        Console.SetCursorPosition(0, 6);
+                        Console.WriteLine("1.Show the deck\n2.Take on the card from deck\n3.Teke several cards from the deck\n4.Exit");
+                        Console.SetCursorPosition(0, 11);
+                        userInput = Console.ReadLine();
+                        break;
+                }
+                Console.ReadKey(true);
+            }
+
         }
     }
 
@@ -111,10 +144,37 @@ namespace Card_deck
         {
             Card card = null;
             List<Card> tempDeck = _deck;
-            card  = tempDeck.First();
+            card = tempDeck.First();
             tempDeck.Remove(card);
             _deck = tempDeck;
             return card;
+        }
+
+        public List<Card> TakeCard(int count)
+        {
+            List<Card> cards = new List<Card>();
+            List<Card> tempDeck = _deck;
+
+            if (int.TryParse(Console.ReadLine(), out count) == true)
+            {
+                if (count > _deck.Count)
+                {
+                    Console.WriteLine($"The number of cards in the deck is less than what you ask for");
+                }
+                else
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        cards.Add(TakeCard());
+                    }
+                    tempDeck.RemoveRange(0, cards.Count);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"You didn't enter a number");
+            }
+            return cards;
         }
     }
 
