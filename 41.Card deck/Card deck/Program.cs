@@ -76,7 +76,8 @@ namespace Card_deck
                         Console.Clear();
                         Console.WriteLine("Deck cards");
                         Console.SetCursorPosition(0, 2);
-                        Console.WriteLine("1.Show the deck\n2.Take on the card from deck\n3.Teke several cards from the deck\n4.Exit");
+                        Console.WriteLine("1.Show the deck\n2.Suffle the deck\n3.Take on the card from deck\n" +
+                            "4.Teke several cards from the deck\n5.Show player card \n6.Exit");
                         Console.SetCursorPosition(0, 11);
                         userInput = Console.ReadLine();
                         break;
