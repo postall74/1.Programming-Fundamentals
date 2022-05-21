@@ -78,7 +78,6 @@ namespace Card_deck
                 }
                 Console.ReadKey(true);
             }
-
         }
     }
 
@@ -194,6 +193,7 @@ namespace Card_deck
         private bool EmptyDeck()
         {
             bool isEmpty;
+
             if (_deck.Count <= 0)
             {
                 Console.WriteLine($"Empty deck");
@@ -244,6 +244,7 @@ namespace Card_deck
         private bool EmptyDeck()
         {
             bool isEmpty;
+
             if (_cards.Count <= 0)
             {
                 Console.WriteLine($"Player's deck is empty");
