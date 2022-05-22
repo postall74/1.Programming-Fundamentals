@@ -8,15 +8,15 @@ namespace Card_deck
 {
     enum Name : int
     {
-        two,
-        three,
-        four,
-        five,
-        six,
-        seven,
-        eight,
-        nine,
-        ten,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six,
+        Seven,
+        Eight,
+        Nine,
+        Ten,
         Jack,
         Queen,
         King,
@@ -25,10 +25,10 @@ namespace Card_deck
 
     enum Suit : int
     {
-        peak,
-        clubs,
-        hearts,
-        tambourine
+        Peak,
+        Clubs,
+        Hearts,
+        Diamonds
     }
 
     internal class Program
@@ -37,7 +37,6 @@ namespace Card_deck
         {
             Player player = new Player(new List<Card> { });
             Deck deck = new Deck(new List<Card> { });
-            deck.CreateDeck();
             bool isExit = false;
 
             while (isExit == false)
@@ -95,45 +94,32 @@ namespace Card_deck
 
     class Deck
     {
-        private List<Card> _deck;
+        private List<Card> _cards;
 
         public Deck(List<Card> deck)
         {
-            _deck = deck;
+            _cards = deck;
+            Create();
         }
-
-        public void CreateDeck()
-        {
-            int nameCards = 13;
-            int suitCards = 4;
-
-            for (int i = 0; i < suitCards; i++)
-            {
-                for (int j = 0; j < nameCards; j++)
-                {
-                    Card card = new Card((Name)j, (Suit)i);
-                    _deck.Add(card);
-                }
-            }
-        }
+        
         public void Shuffle()
         {
             Random random = new Random();
 
-            for (int i = _deck.Count - 1; i > 0; i--)
+            for (int i = _cards.Count - 1; i > 0; i--)
             {
                 int cardIndex = random.Next(i + 1);
-                Card tempCard = _deck[i];
-                _deck[i] = _deck[cardIndex];
-                _deck[cardIndex] = tempCard;
+                Card tempCard = _cards[i];
+                _cards[i] = _cards[cardIndex];
+                _cards[cardIndex] = tempCard;
             }
         }
 
         public void Show()
         {
-            if (EmptyDeck() == false)
+            if (IsEmpty() == false)
             {
-                foreach (var card in _deck)
+                foreach (var card in _cards)
                 {
                     Console.Write($"{card.Name} {card.Suit} | ");
                 }
@@ -145,12 +131,12 @@ namespace Card_deck
         {
             Card card = null;
 
-            if (EmptyDeck() == false)
+            if (IsEmpty() == false)
             {
-                List<Card> tempDeck = _deck;
+                List<Card> tempDeck = _cards;
                 card = tempDeck.First();
                 tempDeck.Remove(card);
-                _deck = tempDeck;
+                _cards = tempDeck;
                 player.TakeCard(card);
             }
             return card;
@@ -160,9 +146,9 @@ namespace Card_deck
         {
             List<Card> cards = new List<Card>();
 
-            if (EmptyDeck() == false)
+            if (IsEmpty() == false)
             {
-                List<Card> tempDeck = _deck;
+                List<Card> tempDeck = _cards;
                 int count;
                 Console.Write("Enter the number of cards you want to take - ");
 
@@ -172,7 +158,7 @@ namespace Card_deck
                 }
                 else
                 {
-                    if (_deck.Count >= count)
+                    if (_cards.Count >= count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -188,18 +174,29 @@ namespace Card_deck
             return cards;
         }
 
-        private bool EmptyDeck()
+        private void Create()
         {
-            bool isEmpty;
+            int nameCards = Enum.GetValues(typeof(Name)).Length;
+            int suitCards = Enum.GetValues(typeof(Suit)).Length;
 
-            if (_deck.Count <= 0)
+            for (int i = 0; i < suitCards; i++)
+            {
+                for (int j = 0; j < nameCards; j++)
+                {
+                    Card card = new Card((Name)j, (Suit)i);
+                    _cards.Add(card);
+                }
+            }
+        }
+
+        private bool IsEmpty()
+        {
+            bool isEmpty = false;
+
+            if (_cards.Count <= 0)
             {
                 Console.WriteLine($"Empty deck");
                 isEmpty = true;
-            }
-            else
-            {
-                isEmpty = false;
             }
             return isEmpty;
         }
@@ -230,7 +227,7 @@ namespace Card_deck
 
         public void Show()
         {
-            if (EmptyDeck() == false)
+            if (IsEmpty() == false)
             {
                 foreach (var card in _cards)
                 {
@@ -239,18 +236,14 @@ namespace Card_deck
             }
         }
 
-        private bool EmptyDeck()
+        private bool IsEmpty()
         {
-            bool isEmpty;
+            bool isEmpty = false;
 
             if (_cards.Count <= 0)
             {
                 Console.WriteLine($"Player's deck is empty");
                 isEmpty = true;
-            }
-            else
-            {
-                isEmpty = false;
             }
             return isEmpty;
         }
