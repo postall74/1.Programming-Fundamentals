@@ -17,13 +17,11 @@ namespace Produse_store
     class Product
     {
         public string Name { get; private set; }
-        public int Count { get; private set; }
         public int Price { get; private set; }
 
-        public Product(string name, int count, int price)
+        public Product(string name, int price)
         {
             Name = name;
-            Count = count;
             Price = price;
         }
     }
@@ -32,7 +30,7 @@ namespace Produse_store
     {
         private List<Product> _products;
         public int Money { get; private set; }
-        
+
 
         public Seller(List<Product> products)
         {
@@ -44,16 +42,32 @@ namespace Produse_store
         {
             foreach (Product product in _products)
             {
-                if (product.Count > 0)
+                if (_products.Count > 0)
                 {
                     Console.Write($"{product.Name}: price {product.Price}");
+                }
+                else
+                {
+                    Console.WriteLine($"Products ran out");
                 }
             }
         }
 
-        public void TakeProduct()
+        public void TakeProduct(Buyer buyer)
         {
+            Show();
+            Console.Write($"Choose what you want to buy - ");
+            string productName = Console.ReadLine();
 
+            if (_products.Find(product => productName == product.Name).ToString() == productName)
+            {
+                Money += buyer.Purchase(productName);
+                _products.Remove(_products.Find(product => productName == product.Name));
+            }
+            else
+            {
+                Console.WriteLine($"There is no such product");
+            }
         }
     }
 
@@ -85,10 +99,12 @@ namespace Produse_store
             _products = new List<Product>();
         }
 
-        public void Purchase()
+        public int Purchase(string productName)
         {
+            int purchasePrice;
             List<Product> products = _products;
 
+            return purchasePrice;
         }
     }
 }
