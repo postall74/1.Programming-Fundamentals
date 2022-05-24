@@ -10,7 +10,9 @@ namespace Produse_store
     {
         static void Main(string[] args)
         {
-            Buyer buyer = new Buyer();
+            int moneySeller = 0;
+            int moneyByer = 300;
+            Buyer buyer = new Buyer(new List<Product>(), moneyByer);
             Seller seller = new Seller
             (
                 new List<Product>
@@ -20,7 +22,8 @@ namespace Produse_store
                     new Product("Хлеб", 40),
                     new Product("Яйца", 110),
                     new Product("Мин.вода", 60)
-                }
+                },
+                moneySeller
             );
             bool isExit = false;
 
@@ -72,32 +75,88 @@ namespace Produse_store
         }
     }
 
-    class Seller
+    class Seller : Human
     {
         private List<Product> _products;
+        new public int Money { get; private set; }
+
+        public Seller(List<Product> products, int money) : base(products, money)
+        {
+            Money = money;
+            _products = products;
+        }
+
+        new public void Show()
+        {
+            base.Show();
+        }
+
+        new public void GiveProduct(Buyer buyer)
+        {
+            base.GiveProduct(buyer);
+        }
+    }
+
+    class Buyer : Human
+    {
+        private List<Product> _products;
+        new public int Money { get; private set; }
+
+        public Buyer(List<Product> products, int money) : base(products, money)
+        {
+            Money = money;
+            _products = products;
+        }
+
+        new public int TakeProduct(Product product)
+        {
+            int price = base.TakeProduct(product);
+            return price;
+        }
+
+        new public void Show()
+        {
+            base.Show();
+        }
+    }
+
+    class Human
+    {
+        private List<Product> _products;
+
         public int Money { get; private set; }
 
-        public Seller(List<Product> products)
+        public Human(List<Product> products, int money)
         {
-            Money = 0;
+            Money = money;
             _products = products;
         }
 
         public void Show()
         {
             Console.SetCursorPosition(0, 15);
-            foreach (Product product in _products)
+            Console.WriteLine($"Аmount of money - {Money}\n");
+
+            if (_products.Count > 0)
             {
-                if (_products.Count > 0)
+                foreach (Product product in _products)
                 {
                     Console.Write($"{product.Name}: price {product.Price}");
+                    Console.WriteLine();
                 }
-                else
-                {
-                    Console.WriteLine($"Products ran out");
-                }
-                Console.WriteLine();
             }
+            else
+            {
+                Console.WriteLine($"Products ran out");
+            }
+        }
+
+        public int TakeProduct(Product product)
+        {
+            int purchasePrice = product.Price;
+            Money -= product.Price;
+            _products.Add(product);
+            return purchasePrice;
         }
 
         public void GiveProduct(Buyer buyer)
@@ -122,65 +181,6 @@ namespace Produse_store
             else
             {
                 Console.WriteLine($"There is no such product");
-            }
-        }
-    }
-
-    class Buyer
-    {
-        private List<Product> _products;
-        public int Money { get; private set; }
-
-        public Buyer()
-        {
-            Console.Write($"How much money do you have? - ");
-            int money;
-            bool isNumber = false;
-
-            while (isNumber == false)
-            {
-                isNumber = int.TryParse(Console.ReadLine(), out money);
-
-                if (isNumber == true)
-                {
-                    Money = money;
-                    _products = new List<Product>();
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine($"Please repeat");
-                    Console.Write($"How much money do you have? - ");
-                    isNumber = int.TryParse(Console.ReadLine(), out money);
-                }
-            }
-        }
-
-        public int TakeProduct(Product product)
-        {
-            int purchasePrice = product.Price; 
-            Money -= product.Price;
-            _products.Add(product);
-            return purchasePrice;
-
-        }
-
-        public void Show()
-        {
-            Console.SetCursorPosition(0, 15);
-            Console.WriteLine($"Аmount of money - {Money}");
-
-            if (_products.Count > 0)
-            {
-                foreach (Product product in _products)
-                {
-                    Console.Write($"{product.Name}");
-                }
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"Shopping cart is empty");
             }
         }
     }
