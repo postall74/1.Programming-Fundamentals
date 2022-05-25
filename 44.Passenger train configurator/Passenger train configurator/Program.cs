@@ -67,14 +67,14 @@ namespace Passenger_train_configurator
 
     class Passengers
     {
-        private Random random = new Random();
-        private int minimalPassangers = 10;
-        private int maximalPassangers = 300;
+        private Random _random = new Random();
+        private int _minimalPassangers = 10;
+        private int _maximalPassangers = 300;
         public int Count { get; private set; }
 
         public Passengers()
         {
-            Count = random.Next(minimalPassangers, maximalPassangers);
+            Count = _random.Next(_minimalPassangers, _maximalPassangers);
         }
 
         public static void Show(Passengers passengers)
