@@ -272,11 +272,11 @@ namespace Passenger_train_configurator
 
         public void ShowAllDirections()
         {
-            int i = 0;
+            int index = 0;
             foreach (var direction in _directions)
             {
-                Console.WriteLine($"{i}.Departure Station - {direction.DepartureStation} | Arrival Station - {direction.ArrivalStation}");
-                i++;
+                Console.WriteLine($"{index}.Departure Station - {direction.DepartureStation} | Arrival Station - {direction.ArrivalStation}");
+                index++;
             }
         }
 
