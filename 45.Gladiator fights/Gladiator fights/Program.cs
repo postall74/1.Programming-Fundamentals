@@ -23,7 +23,7 @@ namespace Gladiator_fights
                 switch (usertInput)
                 {
                     case "1":
-                        fighters = CreateFighters();
+                        fighters = CreateFighters(fighters);
                         break;
                     case "2":
                         Fight(fighters);
@@ -41,48 +41,62 @@ namespace Gladiator_fights
 
         }
 
-        public static void Fight(List<Fighter> fighters)
+        public static List<Fighter> WhoWin(List<Fighter> fighters, List<Fighter> result)
         {
-            Fighter leftFighter = fighters[SelectFighter(fighters)];
-            Fighter rightFighter = fighters[SelectFighter(fighters)];
+            Fighter leftFighter = result[0];
+            Fighter rightFighter = result[1];
 
-            while (leftFighter.Health > 0 && rightFighter.Health > 0)
+            if (leftFighter.Health <= 0 && rightFighter.Health <= 0)
             {
-                if (leftFighter.Health <= 0)
-                {
-                    Console.WriteLine($"{rightFighter.Name} is WIN");
-                }
-                else if (rightFighter.Health <= 0)
-                {
-                    Console.WriteLine($"{leftFighter.Name} is WIN");
-                }
-                else if(leftFighter.Health <= 0 || rightFighter.Health <= 0)
-                {
-                    Console.WriteLine($"Both fighters are dead");
-                }
-                else
+                Console.WriteLine($"Both fighters are dead");
+                fighters.Remove(leftFighter);
+                fighters.Remove(rightFighter);
+            }
+            else if (leftFighter.Health <= 0)
+            {
+                Console.WriteLine($"{rightFighter.Name} is WIN");
+                fighters.Remove(leftFighter);
+            }
+            else if (rightFighter.Health <= 0)
+            {
+                Console.WriteLine($"{leftFighter.Name} is WIN");
+                fighters.Remove(rightFighter);
+            }
+            return fighters;
+        }
+
+        public static List<Fighter> Fight(List<Fighter> fighters)
+        {
+            if (fighters.Count < 2)
+            {
+                Console.WriteLine($"Not enough fighters");
+            }
+            else
+            {
+                Fighter leftFighter = fighters[SelectFighterForFight(fighters)];
+                Fighter rightFighter = fighters[SelectFighterForFight(fighters)];
+
+                while (leftFighter.Health > 0 && rightFighter.Health > 0)
                 {
                     Console.WriteLine();
                     leftFighter.TakeDamage(rightFighter.Damage);
                     rightFighter.TakeDamage(leftFighter.Damage);
                     leftFighter.Show();
                     rightFighter.Show();
+                    Console.ReadKey(true);
                 }
-                Console.ReadKey(true);
+                List<Fighter> result = new List<Fighter>
+                {
+                    leftFighter,
+                    rightFighter
+                };
+                fighters = WhoWin(fighters, result);
+                return fighters;
             }
-
-            if (leftFighter.Health <= 0)
-            {
-                fighters.Remove(leftFighter);
-            }
-
-            if (rightFighter.Health <= 0)
-            {
-                fighters.Remove(rightFighter);
-            }
+            return null;
         }
 
-        public static int SelectFighter(List<Fighter> fighters)
+        public static int SelectFighterForFight(List<Fighter> fighters)
         {
             int fighterIndex = 0;
             bool isExit = false;
@@ -114,53 +128,149 @@ namespace Gladiator_fights
             return fighterIndex;
         }
 
-        public static List<Fighter> CreateFighters()
+        public static List<Fighter> CreateFighters(List<Fighter> fighters)
         {
-            List<Fighter> fighters = new List<Fighter>();
-            string userInput;
-            bool isExit = false;
+            Fighter fighter;
+            fighter = ChooseFighter();
 
-            while (isExit == false)
+            switch (fighter.GetType().Name)
             {
-                Console.Clear();
-                Console.WriteLine($"1.Barbarian\n2.Warrior\n3.Magic\n4.Monk\n5.Exit");
-                userInput = Console.ReadLine();
-
-                switch (userInput.ToLower())
-                {
-                    case "1":
-                    case "barbarion":
-                        Barbarion barbarion = CreateBarbarion();
-                        fighters.Add(barbarion);
-                        break;
-                    case "2":
-                    case "warrior":
-                        Warrior warrior = CreateWarrior();
-                        fighters.Add(warrior);
-                        break;
-                    case "3":
-                    case "magic":
-                        Magic magic = CreateMagic();
-                        fighters.Add(magic);
-                        break;
-                    case "4":
-                    case "monk":
-                        Monk monk = CreateMonk();
-                        fighters.Add(monk);
-                        break;
-                    case "5":
-                    case "exit":
-                        isExit = true;
-                        break;
-                    default:
-                        Console.WriteLine($"Retry");
-                        break;
-                }
+                case nameof(Barbarion):
+                    fighters.Add(Barbarion.Create());
+                    break;
+                case nameof(Warrior):
+                    fighters.Add(Warrior.Create());
+                    break;
+                case nameof(Magic):
+                    fighters.Add(Magic.Create());
+                    break;
+                case nameof(Monk):
+                    fighters.Add(Monk.Create());
+                    break;
+                default:
+                    Console.WriteLine($"Retry");
+                    Console.ReadKey(true);
+                    break;
             }
             return fighters;
         }
 
-        public static Barbarion CreateBarbarion()
+        private static Fighter ChooseFighter()
+        {
+            int indexFighter;
+            bool isExit = false;
+            List<Fighter> allFighters = new List<Fighter>
+            {
+                new Barbarion("1", 125, 15),
+                new Warrior("2", 100, 10, 20),
+                new Magic("3", 75, 25, 150),
+                new Monk("4", 100, 13, 15, 45)
+            };
+
+            while (isExit == false)
+            {
+                Console.Clear();
+
+                for (int i = 0; i < allFighters.Count; i++)
+                {
+                    Console.WriteLine($"{i}.{allFighters[i].GetType().Name}");
+                }
+                Console.Write($"Choose index fighter - ");
+
+                if (int.TryParse(Console.ReadLine(), out indexFighter) == true)
+                {
+                    if (indexFighter > allFighters.Count - 1)
+                    {
+                        Console.WriteLine($"There is no such fighter");
+                        Console.ReadKey(true);
+                    }
+                    else
+                    {
+                        isExit = true;
+                        return allFighters[indexFighter];
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Retry");
+                    Console.ReadKey(true);
+                }
+            }
+            return null;
+        }
+    }
+
+    public abstract class Fighter
+    {
+        private string _name;
+        private float _health;
+        private int _damage;
+
+        public virtual string Name
+        {
+            get
+            {
+                return _name;
+            }
+            private set
+            {
+                if (string.IsNullOrEmpty(value) == false)
+                {
+                    _name = value;
+                }
+                else
+                {
+                    Console.Write("Retry - ");
+                    value = Console.ReadLine();
+                    _name = value;
+                }
+            }
+        }
+        public virtual float Health { get { return _health; } set { _health = value; } }
+        public virtual int Damage { get { return _damage; } set { _damage = value; } }
+
+        public Fighter(string name, float health, int damage)
+        {
+            Name = name;
+            Health = health;
+            Damage = damage;
+        }
+
+        public abstract void TakeDamage(int damage);
+
+        public abstract void Show();
+    }
+
+    public class Barbarion : Fighter
+    {
+        private int percentCriticalDamage = 75;
+
+        public override string Name => base.Name;
+        public override float Health => base.Health;
+        public override int Damage => base.Damage;
+
+        public Barbarion(string name, float health, int damage) : base(name, health, damage)
+        {
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            int oneHundredPercent = 100;
+            int minimumHealthForCriticalDamage = 20;
+
+            if (Health <= minimumHealthForCriticalDamage)
+            {
+                Damage += Damage / oneHundredPercent * percentCriticalDamage;
+            }
+            Health -= damage;
+        }
+
+        public override void Show()
+        {
+            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage}");
+        }
+
+        public static Barbarion Create()
         {
             Barbarion barbarion;
             string name;
@@ -204,8 +314,45 @@ namespace Gladiator_fights
             }
             return _ = new Barbarion(" ", 120, 75);
         }
+    }
 
-        public static Warrior CreateWarrior()
+    public class Warrior : Fighter
+    {
+        private int _armor;
+        private int _attackNumber = 0;
+
+        public override string Name => base.Name;
+        public override float Health => base.Health;
+        public override int Damage => base.Damage;
+        public int Armor { get { return _armor; } private set { _armor = value; } }
+
+        public Warrior(string name, float health, int damage, int armor) : base(name, health, damage)
+        {
+            Armor = armor;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            int oneHundredPercent = 100;
+
+            if (_attackNumber == 3)
+            {
+                Console.WriteLine($"Warrior {Name} blocked the attack");
+                _attackNumber = 0;
+            }
+            else
+            {
+                _attackNumber++;
+                Health -= (float)damage - ((float)damage / oneHundredPercent * Armor);
+            }
+        }
+
+        public override void Show()
+        {
+            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor}");
+        }
+
+        public static Warrior Create()
         {
             Warrior warrior;
             string name;
@@ -258,8 +405,53 @@ namespace Gladiator_fights
             }
             return _ = new Warrior(" ", 100, 10, 25);
         }
+    }
 
-        public static Magic CreateMagic()
+    public class Magic : Fighter
+    {
+        private int _mana;
+
+        public override string Name => base.Name;
+        public override float Health => base.Health;
+        public override int Damage => base.Damage;
+        public int Mana { get { return _mana; } private set { _mana = value; } }
+
+        public Magic(string name, float health, int damage, int mana) : base(name, health, damage)
+        {
+            Mana = mana;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            int takeDamage = Damage;
+            int amountOfManaRestored = 5;
+            int nullDamage = 0;
+
+            if (Damage > nullDamage)
+            {
+                takeDamage = Damage;
+            }
+
+            if (Mana < Damage)
+            {
+                Console.WriteLine($"Out of mana, can't attack");
+                Damage = nullDamage;
+            }
+            else
+            {
+                Damage = takeDamage;
+                Mana -= Damage;
+            }
+            Health -= damage;
+            Mana += amountOfManaRestored;
+        }
+
+        public override void Show()
+        {
+            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Mana {Mana}");
+        }
+
+        public static Magic Create()
         {
             Magic magic;
             string name;
@@ -312,8 +504,48 @@ namespace Gladiator_fights
             }
             return _ = new Magic(" ", 65, 25, 100);
         }
+    }
 
-        public static Monk CreateMonk()
+    public class Monk : Fighter
+    {
+        private int _mana;
+        private int _armor;
+
+        public override string Name => base.Name;
+        public override int Damage { get => base.Damage; set => base.Damage = value; }
+        public override float Health { get => base.Health; set => base.Health = value; }
+        public int Mana { get { return _mana; } private set { _mana = value; } }
+        public int Armor { get { return _armor; } private set { _armor = value; } }
+
+        public Monk(string name, float health, int damage, int armor, int mana) : base(name, health, damage)
+        {
+            Armor = armor;
+            Mana = mana;
+        }
+
+        public override void Show()
+        {
+            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor} | Mana {Mana}");
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            int oneHundredPercent = 100;
+            int minimalMana = 5;
+            int amountOfManaPerSpell = 5;
+            int amountOfHealthRestored = 3;
+
+            Health -= (float)damage - ((float)damage / oneHundredPercent * Armor);
+
+            if (Mana > minimalMana)
+            {
+                Health += amountOfHealthRestored;
+                Mana -= amountOfManaPerSpell;
+            }
+            Mana++;
+        }
+
+        public static Monk Create()
         {
             Monk monk;
             string name;
@@ -374,187 +606,6 @@ namespace Gladiator_fights
                 }
             }
             return _ = new Monk(" ", 65, 11, 15, 100);
-        }
-    }
-
-    public abstract class Fighter
-    {
-        private string _name;
-        private float _health;
-        private int _damage;
-
-        public virtual string Name
-        {
-            get
-            {
-                return _name;
-            }
-            private set
-            {
-                if (string.IsNullOrEmpty(value) == false)
-                {
-                    _name = value;
-                }
-                else
-                {
-                    Console.Write("Retry - ");
-                    value = Console.ReadLine();
-                    _name = value;
-                }
-            }
-        }
-        public virtual float Health { get { return _health; } set { _health = value; } }
-        public virtual int Damage { get { return _damage; } set { _damage = value; } }
-
-        public Fighter(string name, float health, int damage)
-        {
-            Name = name;
-            Health = health;
-            Damage = damage;
-        }
-
-        public abstract void TakeDamage(int damage);
-
-        public abstract void Show();
-    }
-
-    public class Barbarion : Fighter
-    {
-        private int critical = 75;
-
-        public override string Name => base.Name;
-        public override float Health => base.Health;
-        public override int Damage => base.Damage;
-
-        public Barbarion(string name, float health, int damage) : base(name, health, damage)
-        {
-        }
-
-        public override void TakeDamage(int damage)
-        {
-            if (Health <= Health / 5)
-            {
-                Damage = Damage + (Damage / 100 * critical);
-            }
-            Health -= damage;
-        }
-
-        public override void Show()
-        {
-            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage}");
-        }
-    }
-
-    public class Warrior : Fighter
-    {
-        private int _armor;
-        private int _attackNumber = 0;
-
-        public override string Name => base.Name;
-        public override float Health => base.Health;
-        public override int Damage => base.Damage;
-        public int Armor { get { return _armor; } private set { _armor = value; } }
-
-        public Warrior(string name, float health, int damage, int armor) : base(name, health, damage)
-        {
-            Armor = armor;
-        }
-
-        public override void TakeDamage(int damage)
-        {
-            if (_attackNumber == 3)
-            {
-                Console.WriteLine($"Warrior {Name} blocked the attack");
-                _attackNumber = 0;
-            }
-            else
-            {
-                _attackNumber++;
-                Health -= (float)damage - ((float)damage / 100 * Armor);
-            }
-        }
-
-        public override void Show()
-        {
-            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor}");
-        }
-    }
-
-    public class Magic : Fighter
-    {
-        private int _mana;
-
-        public override string Name => base.Name;
-        public override float Health => base.Health;
-        public override int Damage => base.Damage;
-        public int Mana { get { return _mana; } private set { _mana = value; } }
-
-        public Magic(string name, float health, int damage, int mana) : base(name, health, damage)
-        {
-            Mana = mana;
-        }
-
-        public override void TakeDamage(int damage)
-        {
-            int takeDamage = Damage;
-
-            if (Damage > 0)
-            {
-                takeDamage = Damage;
-            }
-
-            if (Mana < Damage)
-            {
-                Console.WriteLine($"Out of mana, can't attack");
-                Damage = 0;
-            }
-            else
-            {
-                Damage = takeDamage;
-                Mana -= Damage;
-            }
-            Health -= damage;
-            Mana += 5;
-        }
-
-        public override void Show()
-        {
-            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Mana {Mana}");
-        }
-    }
-
-    public class Monk : Fighter
-    {
-        private int _mana;
-        private int _armor;
-
-        public override string Name => base.Name;
-        public override int Damage { get => base.Damage; set => base.Damage = value; }
-        public override float Health { get => base.Health; set => base.Health = value; }
-        public int Mana { get { return _mana; } private set { _mana = value; } }
-        public int Armor { get { return _armor; } private set { _armor = value; } }
-
-        public Monk(string name, float health, int damage, int armor, int mana) : base(name, health, damage)
-        {
-            Armor = armor;
-            Mana = mana;
-        }
-
-        public override void Show()
-        {
-            Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor} | Mana {Mana}");
-        }
-
-        public override void TakeDamage(int damage)
-        {
-            Health -= (float)damage - ((float)damage / 100 * Armor);
-
-            if (Mana > 5)
-            {
-                Health += 3;
-                Mana -= 5;
-            }
-            Mana++;
         }
     }
 }
