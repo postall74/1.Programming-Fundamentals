@@ -50,16 +50,24 @@ namespace Gladiator_fights
             switch (fighter.GetType().Name)
             {
                 case nameof(Barbarion):
-                    fighters.Add(Barbarion.Create());
+                    Barbarion barbarion = new Barbarion(" ", 120, 15);
+                    barbarion.Create();
+                    fighters.Add(barbarion);
                     break;
                 case nameof(Warrior):
-                    fighters.Add(Warrior.Create());
+                    Warrior warrior = new Warrior(" ", 100, 10, 20);
+                    warrior.Create();
+                    fighters.Add(warrior);
                     break;
                 case nameof(Magic):
-                    fighters.Add(Magic.Create());
+                    Magic magic = new Magic(" ", 75, 25, 150);
+                    magic.Create();
+                    fighters.Add(magic);
                     break;
                 case nameof(Monk):
-                    fighters.Add(Monk.Create());
+                    Monk monk = new Monk(" ", 100, 10, 10, 45);
+                    monk.Create();
+                    fighters.Add(monk);
                     break;
                 default:
                     Console.WriteLine($"Retry");
@@ -156,7 +164,7 @@ namespace Gladiator_fights
 
     public class Barbarion : Fighter
     {
-        private int percentCriticalDamage = 75;
+        private int _percentCriticalDamage = 75;
 
         public override string Name => base.Name;
         public override float Health => base.Health;
@@ -173,7 +181,7 @@ namespace Gladiator_fights
 
             if (Health <= minimumHealthForCriticalDamage)
             {
-                Damage += Damage / oneHundredPercent * percentCriticalDamage;
+                Damage += Damage / oneHundredPercent * _percentCriticalDamage;
             }
             Health -= damage;
         }
@@ -183,7 +191,7 @@ namespace Gladiator_fights
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage}");
         }
 
-        public static Barbarion Create()
+        public Barbarion Create()
         {
             Barbarion barbarion;
             string name;
@@ -265,7 +273,7 @@ namespace Gladiator_fights
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor}");
         }
 
-        public static Warrior Create()
+        public Warrior Create()
         {
             Warrior warrior;
             string name;
@@ -364,7 +372,7 @@ namespace Gladiator_fights
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Mana {Mana}");
         }
 
-        public static Magic Create()
+        public Magic Create()
         {
             Magic magic;
             string name;
@@ -458,7 +466,7 @@ namespace Gladiator_fights
             Mana++;
         }
 
-        public static Monk Create()
+        public Monk Create()
         {
             Monk monk;
             string name;
