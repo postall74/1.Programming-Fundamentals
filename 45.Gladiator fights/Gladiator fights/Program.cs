@@ -12,21 +12,22 @@ namespace Gladiator_fights
         {
             bool isExit = false;
             List<Fighter> fighters = new List<Fighter>();
+            Arena arena = new Arena(fighters);
 
             while (isExit == false)
             {
                 Console.Clear();
-                Console.WriteLine($"1.Crete fihters\n2.Fight\n3.Exit");
+                Console.WriteLine($"1.Crete fihter\n2.Fight\n3.Exit");
                 string usertInput;
                 usertInput = Console.ReadLine();
 
                 switch (usertInput)
                 {
                     case "1":
-                        fighters = CreateFighters(fighters);
+                        CreateFighters(fighters);
                         break;
                     case "2":
-                        Fight(fighters);
+                        arena.Fight(fighters);
                         break;
                     case "3":
                         isExit = true;
@@ -41,94 +42,7 @@ namespace Gladiator_fights
 
         }
 
-        public static List<Fighter> WhoWin(List<Fighter> fighters, List<Fighter> result)
-        {
-            Fighter leftFighter = result[0];
-            Fighter rightFighter = result[1];
-
-            if (leftFighter.Health <= 0 && rightFighter.Health <= 0)
-            {
-                Console.WriteLine($"Both fighters are dead");
-                fighters.Remove(leftFighter);
-                fighters.Remove(rightFighter);
-            }
-            else if (leftFighter.Health <= 0)
-            {
-                Console.WriteLine($"{rightFighter.Name} is WIN");
-                fighters.Remove(leftFighter);
-            }
-            else if (rightFighter.Health <= 0)
-            {
-                Console.WriteLine($"{leftFighter.Name} is WIN");
-                fighters.Remove(rightFighter);
-            }
-            return fighters;
-        }
-
-        public static List<Fighter> Fight(List<Fighter> fighters)
-        {
-            if (fighters.Count < 2)
-            {
-                Console.WriteLine($"Not enough fighters");
-            }
-            else
-            {
-                Fighter leftFighter = fighters[SelectFighterForFight(fighters)];
-                Fighter rightFighter = fighters[SelectFighterForFight(fighters)];
-
-                while (leftFighter.Health > 0 && rightFighter.Health > 0)
-                {
-                    Console.WriteLine();
-                    leftFighter.TakeDamage(rightFighter.Damage);
-                    rightFighter.TakeDamage(leftFighter.Damage);
-                    leftFighter.Show();
-                    rightFighter.Show();
-                    Console.ReadKey(true);
-                }
-                List<Fighter> result = new List<Fighter>
-                {
-                    leftFighter,
-                    rightFighter
-                };
-                fighters = WhoWin(fighters, result);
-                return fighters;
-            }
-            return null;
-        }
-
-        public static int SelectFighterForFight(List<Fighter> fighters)
-        {
-            int fighterIndex = 0;
-            bool isExit = false;
-
-            while (isExit == false)
-            {
-                Console.Clear();
-
-                for (int i = 0; i < fighters.Count; i++)
-                {
-                    Console.Write($"{i}. ");
-                    fighters[i].Show();
-                }
-                Console.Write($"Select fighter - ");
-
-                if (int.TryParse(Console.ReadLine(), out fighterIndex) == false)
-                {
-                    Console.WriteLine($"Retry");
-                }
-                else if (fighterIndex > fighters.Count)
-                {
-                    Console.WriteLine($"There is no fighter with this number, retry.");
-                }
-                else
-                {
-                    isExit = true;
-                }
-            }
-            return fighterIndex;
-        }
-
-        public static List<Fighter> CreateFighters(List<Fighter> fighters)
+        public static void CreateFighters(List<Fighter> fighters)
         {
             Fighter fighter;
             fighter = ChooseFighter();
@@ -152,7 +66,6 @@ namespace Gladiator_fights
                     Console.ReadKey(true);
                     break;
             }
-            return fighters;
         }
 
         private static Fighter ChooseFighter()
@@ -312,7 +225,7 @@ namespace Gladiator_fights
                     Console.WriteLine($"Retry");
                 }
             }
-            return _ = new Barbarion(" ", 120, 75);
+            return barbarion = new Barbarion(" ", 120, 75);
         }
     }
 
@@ -403,7 +316,7 @@ namespace Gladiator_fights
                     Console.WriteLine($"Retry");
                 }
             }
-            return _ = new Warrior(" ", 100, 10, 25);
+            return warrior = new Warrior(" ", 100, 10, 25);
         }
     }
 
@@ -502,7 +415,7 @@ namespace Gladiator_fights
                     Console.WriteLine($"Retry");
                 }
             }
-            return _ = new Magic(" ", 65, 25, 100);
+            return magic = new Magic(" ", 65, 25, 100);
         }
     }
 
@@ -605,7 +518,98 @@ namespace Gladiator_fights
                     Console.WriteLine($"Retry");
                 }
             }
-            return _ = new Monk(" ", 65, 11, 15, 100);
+            return monk = new Monk(" ", 65, 11, 15, 100);
+        }
+    }  
+
+    public class Arena
+    {
+        private List<Fighter> _fighters;
+
+        public Arena(List<Fighter> fighters)
+        {
+            _fighters = fighters;
+        }
+
+        public void Fight(List<Fighter> fighters)
+        {
+            if (fighters.Count < 2)
+            {
+                Console.WriteLine($"Not enough fighters");
+            }
+            else
+            {
+                Fighter leftFighter = fighters[SelectFighterForFight(fighters)];
+                Fighter rightFighter = fighters[SelectFighterForFight(fighters)];
+
+                while (leftFighter.Health > 0 && rightFighter.Health > 0)
+                {
+                    Console.WriteLine();
+                    leftFighter.TakeDamage(rightFighter.Damage);
+                    rightFighter.TakeDamage(leftFighter.Damage);
+                    leftFighter.Show();
+                    rightFighter.Show();
+                    Console.ReadKey(true);
+                }
+                List<Fighter> result = new List<Fighter>
+                {
+                    leftFighter,
+                    rightFighter
+                };
+                ShowWinner(fighters, leftFighter, rightFighter);
+            }
+        }
+
+        private int SelectFighterForFight(List<Fighter> fighters)
+        {
+            int fighterIndex = 0;
+            bool isExit = false;
+
+            while (isExit == false)
+            {
+                Console.Clear();
+
+                for (int i = 0; i < fighters.Count; i++)
+                {
+                    Console.Write($"{i}. ");
+                    fighters[i].Show();
+                }
+                Console.Write($"Select fighter - ");
+
+                if (int.TryParse(Console.ReadLine(), out fighterIndex) == false)
+                {
+                    Console.WriteLine($"Retry");
+                }
+                else if (fighterIndex > fighters.Count)
+                {
+                    Console.WriteLine($"There is no fighter with this number, retry.");
+                }
+                else
+                {
+                    isExit = true;
+                }
+            }
+            return fighterIndex;
+        }
+
+        private void ShowWinner(List<Fighter> fighters, Fighter leftFighter, Fighter rightFighter)
+        {
+            if (leftFighter.Health <= 0 && rightFighter.Health <= 0)
+            {
+                Console.WriteLine($"Both fighters are dead");
+                fighters.Remove(leftFighter);
+                fighters.Remove(rightFighter);
+            }
+            else if (leftFighter.Health <= 0)
+            {
+                Console.WriteLine($"{rightFighter.Name} is WIN");
+                fighters.Remove(leftFighter);
+            }
+            else if (rightFighter.Health <= 0)
+            {
+                Console.WriteLine($"{leftFighter.Name} is WIN");
+                fighters.Remove(rightFighter);
+            }
         }
     }
 }
