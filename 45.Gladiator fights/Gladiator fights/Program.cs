@@ -49,23 +49,19 @@ namespace Gladiator_fights
             switch (fighter.GetType().Name)
             {
                 case nameof(Barbarion):
-                    Barbarion barbarion = new Barbarion(" ", 120, 15);
-                    barbarion.Create();
+                    Barbarion barbarion = Barbarion.Create();
                     fighters.Add(barbarion);
                     break;
                 case nameof(Warrior):
-                    Warrior warrior = new Warrior(" ", 100, 10, 20);
-                    warrior.Create();
+                    Warrior warrior = Warrior.Create();
                     fighters.Add(warrior);
                     break;
                 case nameof(Magic):
-                    Magic magic = new Magic(" ", 75, 25, 150);
-                    magic.Create();
+                    Magic magic = Magic.Create();
                     fighters.Add(magic);
                     break;
                 case nameof(Monk):
-                    Monk monk = new Monk(" ", 100, 10, 10, 45);
-                    monk.Create();
+                    Monk monk =  Monk.Create();
                     fighters.Add(monk);
                     break;
                 default:
@@ -188,7 +184,7 @@ namespace Gladiator_fights
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage}");
         }
 
-        public Barbarion Create()
+        public static Barbarion Create()
         {
             Barbarion barbarion;
             string name;
@@ -230,7 +226,7 @@ namespace Gladiator_fights
                     Console.WriteLine($"Retry");
                 }
             }
-            return barbarion = new Barbarion(" ", 120, 75);
+            return null;
         }
     }
 
@@ -270,7 +266,7 @@ namespace Gladiator_fights
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor}");
         }
 
-        public Warrior Create()
+        public static Warrior Create()
         {
             Warrior warrior;
             string name;
@@ -369,7 +365,7 @@ namespace Gladiator_fights
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Mana {Mana}");
         }
 
-        public Magic Create()
+        public static Magic Create()
         {
             Magic magic;
             string name;
@@ -463,7 +459,7 @@ namespace Gladiator_fights
             Mana++;
         }
 
-        public Monk Create()
+        public static Monk Create()
         {
             Monk monk;
             string name;
