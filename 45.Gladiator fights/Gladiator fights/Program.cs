@@ -39,7 +39,6 @@ namespace Gladiator_fights
                 }
                 Console.ReadKey(true);
             }
-
         }
 
         public static void CreateFighters(List<Fighter> fighters)
@@ -170,9 +169,7 @@ namespace Gladiator_fights
         public override float Health => base.Health;
         public override int Damage => base.Damage;
 
-        public Barbarion(string name, float health, int damage) : base(name, health, damage)
-        {
-        }
+        public Barbarion(string name, float health, int damage) : base(name, health, damage) { }
 
         public override void TakeDamage(int damage)
         {
@@ -528,7 +525,7 @@ namespace Gladiator_fights
             }
             return monk = new Monk(" ", 65, 11, 15, 100);
         }
-    }  
+    }
 
     public class Arena
     {
