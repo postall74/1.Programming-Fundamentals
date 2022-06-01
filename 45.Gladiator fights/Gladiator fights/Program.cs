@@ -107,51 +107,6 @@ namespace Gladiator_fights
         {
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage}");
         }
-
-        public static Barbarion Create()
-        {
-            Barbarion barbarion;
-            string name;
-            bool isExit = false;
-
-            while (isExit == false)
-            {
-                Console.Clear();
-                Console.WriteLine($"Enter stats for Barbarion");
-                Console.Write($"Enter name - ");
-                name = Console.ReadLine();
-
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    Console.Write($"Enter health level for {name} - ");
-
-                    if (int.TryParse(Console.ReadLine(), out int health) == true)
-                    {
-                        Console.Write($"Enter damage level for {name} - ");
-
-                        if (int.TryParse(Console.ReadLine(), out int damage) == true)
-                        {
-                            barbarion = new Barbarion(name, health, damage);
-                            isExit = true;
-                            return barbarion;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Retry");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Retry");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Retry");
-                }
-            }
-            return null;
-        }
     }
 
     public class Warrior : Fighter
@@ -188,60 +143,6 @@ namespace Gladiator_fights
         public override void Show()
         {
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Armor: {Armor}");
-        }
-
-        public static Warrior Create()
-        {
-            Warrior warrior;
-            string name;
-            bool isExit = false;
-
-            while (isExit == false)
-            {
-                Console.Clear();
-                Console.WriteLine($"Enter stats for Warrior");
-                Console.Write($"Enter name - ");
-                name = Console.ReadLine();
-
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    Console.Write($"Enter health level for {name} - ");
-
-                    if (int.TryParse(Console.ReadLine(), out int health) == true)
-                    {
-                        Console.Write($"Enter damage level for {name} - ");
-
-                        if (int.TryParse(Console.ReadLine(), out int damage) == true)
-                        {
-                            Console.Write($"Enter armor level for {name} - ");
-
-                            if (int.TryParse(Console.ReadLine(), out int arrmor) == true)
-                            {
-                                warrior = new Warrior(name, health, damage, arrmor);
-                                isExit = true;
-                                return warrior;
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Retry");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Retry");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Retry");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Retry");
-                }
-            }
-            return warrior = new Warrior(" ", 100, 10, 25);
         }
     }
 
@@ -288,60 +189,6 @@ namespace Gladiator_fights
         {
             Console.WriteLine($"{Name} - HP: {Health} | Dammage: {Damage} | Mana {Mana}");
         }
-
-        public static Magic Create()
-        {
-            Magic magic;
-            string name;
-            bool isExit = false;
-
-            while (isExit == false)
-            {
-                Console.Clear();
-                Console.WriteLine($"Enter stats for Magic");
-                Console.Write($"Enter name - ");
-                name = Console.ReadLine();
-
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    Console.Write($"Enter health level for {name} - ");
-
-                    if (int.TryParse(Console.ReadLine(), out int health) == true)
-                    {
-                        Console.Write($"Enter damage level for {name} - ");
-
-                        if (int.TryParse(Console.ReadLine(), out int damage) == true)
-                        {
-                            Console.Write($"Enterl mana level for {name} - ");
-
-                            if (int.TryParse(Console.ReadLine(), out int mana))
-                            {
-                                magic = new Magic(name, health, damage, mana);
-                                isExit = true;
-                                return magic;
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Retry");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Retry");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Retry");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Retry");
-                }
-            }
-            return magic = new Magic(" ", 65, 25, 100);
-        }
     }
 
     public class Monk : Fighter
@@ -381,69 +228,6 @@ namespace Gladiator_fights
                 Mana -= amountOfManaPerSpell;
             }
             Mana++;
-        }
-
-        public static Monk Create()
-        {
-            Monk monk;
-            string name;
-            bool isExit = false;
-
-            while (isExit == false)
-            {
-                Console.Clear();
-                Console.WriteLine($"Enter stats for Monk");
-                Console.Write($"Enter name - ");
-                name = Console.ReadLine();
-
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    Console.Write($"Enter health level for {name} - ");
-
-                    if (int.TryParse(Console.ReadLine(), out int health) == true)
-                    {
-                        Console.Write($"Enter damage level for {name} - ");
-
-                        if (int.TryParse(Console.ReadLine(), out int damage) == true)
-                        {
-                            Console.Write($"Enterl armor level for {name} - ");
-
-                            if (int.TryParse(Console.ReadLine(), out int armor) == true)
-                            {
-                                Console.Write($"Enterl mana level for {name} - ");
-
-                                if (int.TryParse(Console.ReadLine(), out int mana))
-                                {
-                                    monk = new Monk(name, health, damage, armor, mana);
-                                    isExit = true;
-                                    return monk;
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Retey");
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Retry");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Retry");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Retry");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Retry");
-                }
-            }
-            return monk = new Monk(" ", 65, 11, 15, 100);
         }
     }
 
@@ -535,29 +319,6 @@ namespace Gladiator_fights
             Fighter fighter;
             fighter = ChooseFighter();
 
-            switch (fighter.GetType().Name)
-            {
-                case nameof(Barbarion):
-                    Barbarion barbarion = Barbarion.Create();
-                    fighter = barbarion;
-                    break;
-                case nameof(Warrior):
-                    Warrior warrior = Warrior.Create();
-                    fighter = warrior;
-                    break;
-                case nameof(Magic):
-                    Magic magic = Magic.Create();
-                    fighter = magic;
-                    break;
-                case nameof(Monk):
-                    Monk monk = Monk.Create();
-                    fighter = monk;
-                    break;
-                default:
-                    Console.WriteLine($"Retry");
-                    Console.ReadKey(true);
-                    break;
-            }
             return fighter;
         }
 
@@ -577,7 +338,7 @@ namespace Gladiator_fights
             {
                 Console.Clear();
 
-                for (int i = 0; i < allFighters.Count; i++)
+                    for (int i = 0; i < allFighters.Count; i++)
                 {
                     Console.WriteLine($"{i}.{allFighters[i].GetType().Name}");
                 }
