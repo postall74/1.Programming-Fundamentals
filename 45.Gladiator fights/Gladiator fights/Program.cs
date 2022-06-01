@@ -239,7 +239,7 @@ namespace Gladiator_fights
                     rightFighter.Show();
                     Console.ReadKey(true);
                 }
-                ShowWinner(fighters, leftFighter, rightFighter);
+                ShowWinner(leftFighter, rightFighter);
             }
         }
 
@@ -276,7 +276,7 @@ namespace Gladiator_fights
             return fighter;
         }
 
-        private void ShowWinner(List<Fighter> fighters, Fighter leftFighter, Fighter rightFighter)
+        private void ShowWinner(Fighter leftFighter, Fighter rightFighter)
         {
             if (leftFighter.Health <= 0 && rightFighter.Health <= 0)
             {
