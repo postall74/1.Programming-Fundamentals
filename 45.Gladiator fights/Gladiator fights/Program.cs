@@ -12,7 +12,7 @@ namespace Gladiator_fights
         {
             bool isExit = false;
             List<Fighter> fighters = new List<Fighter>();
-            Arena arena = new Arena(fighters);
+            Arena arena = new Arena();
 
             while (isExit == false)
             {
@@ -24,7 +24,7 @@ namespace Gladiator_fights
                 switch (usertInput)
                 {
                     case "1":
-                        CreateFighters(fighters);
+                        fighters.Add(arena.CreateFighter());
                         break;
                     case "2":
                         arena.Fight(fighters);
@@ -40,87 +40,11 @@ namespace Gladiator_fights
                 Console.ReadKey(true);
             }
         }
-
-        public static void CreateFighters(List<Fighter> fighters)
-        {
-            Fighter fighter;
-            fighter = ChooseFighter();
-
-            switch (fighter.GetType().Name)
-            {
-                case nameof(Barbarion):
-                    Barbarion barbarion = Barbarion.Create();
-                    fighters.Add(barbarion);
-                    break;
-                case nameof(Warrior):
-                    Warrior warrior = Warrior.Create();
-                    fighters.Add(warrior);
-                    break;
-                case nameof(Magic):
-                    Magic magic = Magic.Create();
-                    fighters.Add(magic);
-                    break;
-                case nameof(Monk):
-                    Monk monk =  Monk.Create();
-                    fighters.Add(monk);
-                    break;
-                default:
-                    Console.WriteLine($"Retry");
-                    Console.ReadKey(true);
-                    break;
-            }
-        }
-
-        private static Fighter ChooseFighter()
-        {
-            int indexFighter;
-            bool isExit = false;
-            List<Fighter> allFighters = new List<Fighter>
-            {
-                new Barbarion("1", 125, 15),
-                new Warrior("2", 100, 10, 20),
-                new Magic("3", 75, 25, 150),
-                new Monk("4", 100, 13, 15, 45)
-            };
-
-            while (isExit == false)
-            {
-                Console.Clear();
-
-                for (int i = 0; i < allFighters.Count; i++)
-                {
-                    Console.WriteLine($"{i}.{allFighters[i].GetType().Name}");
-                }
-                Console.Write($"Choose index fighter - ");
-
-                if (int.TryParse(Console.ReadLine(), out indexFighter) == true)
-                {
-                    if (indexFighter > allFighters.Count - 1)
-                    {
-                        Console.WriteLine($"There is no such fighter");
-                        Console.ReadKey(true);
-                    }
-                    else
-                    {
-                        isExit = true;
-                        return allFighters[indexFighter];
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Retry");
-                    Console.ReadKey(true);
-                }
-            }
-            return null;
-        }
     }
 
     public abstract class Fighter
     {
         private string _name;
-        private float _health;
-        private int _damage;
 
         public virtual string Name
         {
@@ -142,8 +66,8 @@ namespace Gladiator_fights
                 }
             }
         }
-        public virtual float Health { get { return _health; } set { _health = value; } }
-        public virtual int Damage { get { return _damage; } set { _damage = value; } }
+        public virtual float Health { get; protected set; }
+        public virtual int Damage { get; protected set; }
 
         public Fighter(string name, float health, int damage)
         {
@@ -169,12 +93,12 @@ namespace Gladiator_fights
 
         public override void TakeDamage(int damage)
         {
-            int oneHundredPercent = 100;
+            int numberInPrecent = 100;
             int minimumHealthForCriticalDamage = 20;
 
             if (Health <= minimumHealthForCriticalDamage)
             {
-                Damage += Damage / oneHundredPercent * _percentCriticalDamage;
+                Damage += Damage * _percentCriticalDamage / numberInPrecent;
             }
             Health -= damage;
         }
@@ -247,7 +171,7 @@ namespace Gladiator_fights
 
         public override void TakeDamage(int damage)
         {
-            int oneHundredPercent = 100;
+            int numberInPrecent = 100;
 
             if (_attackNumber == 3)
             {
@@ -257,7 +181,7 @@ namespace Gladiator_fights
             else
             {
                 _attackNumber++;
-                Health -= (float)damage - ((float)damage / oneHundredPercent * Armor);
+                Health -= (float)damage - ((float)damage * Armor / numberInPrecent);
             }
         }
 
@@ -426,8 +350,8 @@ namespace Gladiator_fights
         private int _armor;
 
         public override string Name => base.Name;
-        public override int Damage { get => base.Damage; set => base.Damage = value; }
-        public override float Health { get => base.Health; set => base.Health = value; }
+        public override int Damage => base.Damage;
+        public override float Health => base.Health;
         public int Mana { get { return _mana; } private set { _mana = value; } }
         public int Armor { get { return _armor; } private set { _armor = value; } }
 
@@ -444,12 +368,12 @@ namespace Gladiator_fights
 
         public override void TakeDamage(int damage)
         {
-            int oneHundredPercent = 100;
+            int numberInPrecent = 100;
             int minimalMana = 5;
             int amountOfManaPerSpell = 5;
             int amountOfHealthRestored = 3;
 
-            Health -= (float)damage - ((float)damage / oneHundredPercent * Armor);
+            Health -= (float)damage - ((float)damage * Armor / numberInPrecent);
 
             if (Mana > minimalMana)
             {
@@ -525,12 +449,7 @@ namespace Gladiator_fights
 
     public class Arena
     {
-        private List<Fighter> _fighters;
-
-        public Arena(List<Fighter> fighters)
-        {
-            _fighters = fighters;
-        }
+        public Arena() { }
 
         public void Fight(List<Fighter> fighters)
         {
@@ -540,8 +459,10 @@ namespace Gladiator_fights
             }
             else
             {
-                Fighter leftFighter = fighters[SelectFighterForFight(fighters)];
-                Fighter rightFighter = fighters[SelectFighterForFight(fighters)];
+                Fighter leftFighter = SelectFighterForFight(fighters);
+                fighters.Remove(leftFighter);
+                Fighter rightFighter = SelectFighterForFight(fighters);
+                fighters.Add(leftFighter);
 
                 while (leftFighter.Health > 0 && rightFighter.Health > 0)
                 {
@@ -552,18 +473,13 @@ namespace Gladiator_fights
                     rightFighter.Show();
                     Console.ReadKey(true);
                 }
-                List<Fighter> result = new List<Fighter>
-                {
-                    leftFighter,
-                    rightFighter
-                };
                 ShowWinner(fighters, leftFighter, rightFighter);
             }
         }
 
-        private int SelectFighterForFight(List<Fighter> fighters)
+        private Fighter SelectFighterForFight(List<Fighter> fighters)
         {
-            int fighterIndex = 0;
+            Fighter fighter = null;
             bool isExit = false;
 
             while (isExit == false)
@@ -577,7 +493,7 @@ namespace Gladiator_fights
                 }
                 Console.Write($"Select fighter - ");
 
-                if (int.TryParse(Console.ReadLine(), out fighterIndex) == false)
+                if (int.TryParse(Console.ReadLine(), out int fighterIndex) == false)
                 {
                     Console.WriteLine($"Retry");
                 }
@@ -587,10 +503,11 @@ namespace Gladiator_fights
                 }
                 else
                 {
+                    fighter = fighters[fighterIndex];
                     isExit = true;
                 }
             }
-            return fighterIndex;
+            return fighter;
         }
 
         private void ShowWinner(List<Fighter> fighters, Fighter leftFighter, Fighter rightFighter)
@@ -611,6 +528,81 @@ namespace Gladiator_fights
                 Console.WriteLine($"{leftFighter.Name} is WIN");
                 fighters.Remove(rightFighter);
             }
+        }
+
+        public Fighter CreateFighter()
+        {
+            Fighter fighter;
+            fighter = ChooseFighter();
+
+            switch (fighter.GetType().Name)
+            {
+                case nameof(Barbarion):
+                    Barbarion barbarion = Barbarion.Create();
+                    fighter = barbarion;
+                    break;
+                case nameof(Warrior):
+                    Warrior warrior = Warrior.Create();
+                    fighter = warrior;
+                    break;
+                case nameof(Magic):
+                    Magic magic = Magic.Create();
+                    fighter = magic;
+                    break;
+                case nameof(Monk):
+                    Monk monk = Monk.Create();
+                    fighter = monk;
+                    break;
+                default:
+                    Console.WriteLine($"Retry");
+                    Console.ReadKey(true);
+                    break;
+            }
+            return fighter;
+        }
+
+        private Fighter ChooseFighter()
+        {
+            int indexFighter;
+            bool isExit = false;
+            List<Fighter> allFighters = new List<Fighter>
+            {
+                new Barbarion("1", 125, 15),
+                new Warrior("2", 100, 10, 20),
+                new Magic("3", 75, 25, 150),
+                new Monk("4", 100, 13, 15, 45)
+            };
+
+            while (isExit == false)
+            {
+                Console.Clear();
+
+                for (int i = 0; i < allFighters.Count; i++)
+                {
+                    Console.WriteLine($"{i}.{allFighters[i].GetType().Name}");
+                }
+                Console.Write($"Choose index fighter - ");
+
+                if (int.TryParse(Console.ReadLine(), out indexFighter) == true)
+                {
+                    if (indexFighter > allFighters.Count - 1 || indexFighter < 0)
+                    {
+                        Console.WriteLine($"There is no such fighter");
+                        Console.ReadKey(true);
+                    }
+                    else
+                    {
+                        isExit = true;
+                        return allFighters[indexFighter];
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Retry");
+                    Console.ReadKey(true);
+                }
+            }
+            return null;
         }
     }
 }
