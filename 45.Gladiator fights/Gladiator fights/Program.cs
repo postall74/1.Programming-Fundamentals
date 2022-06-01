@@ -85,10 +85,6 @@ namespace Gladiator_fights
     {
         private int _percentCriticalDamage = 75;
 
-        public override string Name => base.Name;
-        public override float Health => base.Health;
-        public override int Damage => base.Damage;
-
         public Barbarion(string name, float health, int damage) : base(name, health, damage) { }
 
         public override void TakeDamage(int damage)
@@ -114,10 +110,7 @@ namespace Gladiator_fights
         private int _armor;
         private int _attackNumber = 0;
 
-        public override string Name => base.Name;
-        public override float Health => base.Health;
-        public override int Damage => base.Damage;
-        public int Armor { get { return _armor; } private set { _armor = value; } }
+        public int Armor { get; private set; }
 
         public Warrior(string name, float health, int damage, int armor) : base(name, health, damage)
         {
@@ -148,12 +141,7 @@ namespace Gladiator_fights
 
     public class Magic : Fighter
     {
-        private int _mana;
-
-        public override string Name => base.Name;
-        public override float Health => base.Health;
-        public override int Damage => base.Damage;
-        public int Mana { get { return _mana; } private set { _mana = value; } }
+        public int Mana { get; private set; }
 
         public Magic(string name, float health, int damage, int mana) : base(name, health, damage)
         {
@@ -193,14 +181,8 @@ namespace Gladiator_fights
 
     public class Monk : Fighter
     {
-        private int _mana;
-        private int _armor;
-
-        public override string Name => base.Name;
-        public override int Damage => base.Damage;
-        public override float Health => base.Health;
-        public int Mana { get { return _mana; } private set { _mana = value; } }
-        public int Armor { get { return _armor; } private set { _armor = value; } }
+        public int Mana { get; private set; }
+        public int Armor { get; private set; }
 
         public Monk(string name, float health, int damage, int armor, int mana) : base(name, health, damage)
         {
@@ -246,7 +228,7 @@ namespace Gladiator_fights
                 Fighter leftFighter = SelectFighterForFight(fighters);
                 fighters.Remove(leftFighter);
                 Fighter rightFighter = SelectFighterForFight(fighters);
-                fighters.Add(leftFighter);
+                fighters.Remove(rightFighter);
 
                 while (leftFighter.Health > 0 && rightFighter.Health > 0)
                 {
@@ -281,7 +263,7 @@ namespace Gladiator_fights
                 {
                     Console.WriteLine($"Retry");
                 }
-                else if (fighterIndex > fighters.Count)
+                else if (fighterIndex > fighters.Count || fighterIndex < 0)
                 {
                     Console.WriteLine($"There is no fighter with this number, retry.");
                 }
@@ -299,18 +281,14 @@ namespace Gladiator_fights
             if (leftFighter.Health <= 0 && rightFighter.Health <= 0)
             {
                 Console.WriteLine($"Both fighters are dead");
-                fighters.Remove(leftFighter);
-                fighters.Remove(rightFighter);
             }
             else if (leftFighter.Health <= 0)
             {
                 Console.WriteLine($"{rightFighter.Name} is WIN");
-                fighters.Remove(leftFighter);
             }
             else if (rightFighter.Health <= 0)
             {
                 Console.WriteLine($"{leftFighter.Name} is WIN");
-                fighters.Remove(rightFighter);
             }
         }
 
@@ -328,10 +306,10 @@ namespace Gladiator_fights
             bool isExit = false;
             List<Fighter> allFighters = new List<Fighter>
             {
-                new Barbarion("1", 125, 15),
-                new Warrior("2", 100, 10, 20),
-                new Magic("3", 75, 25, 150),
-                new Monk("4", 100, 13, 15, 45)
+                new Barbarion("Barbarion", 125, 15),
+                new Warrior("Warrior", 100, 10, 20),
+                new Magic("Magic", 75, 25, 150),
+                new Monk("Monk", 100, 13, 15, 45)
             };
 
             while (isExit == false)
