@@ -219,11 +219,5 @@ namespace Supermarket
             }
             return prushareAmount;
         }
-
-        public Customer DeleteCustomer(Customer customer)
-        {
-            customer = null;
-            return customer;
-        }
     }
 }
