@@ -71,22 +71,7 @@ namespace War
 
         public void Show()
         {
-            ConsoleColor defautlColor = ConsoleColor.White;
-            ConsoleColor dieColor = ConsoleColor.Red;
-
-            if (Health > 0)
-            {
-                Console.ForegroundColor = defautlColor;
-                Console.Write($"Health - {Health}");
-            }
-            else
-            {
-                Console.ForegroundColor = dieColor;
-                Console.Write($"Health - {Health}");
-            }
-            Console.ForegroundColor = defautlColor;
-            Console.Write($" | Armor - {Armor}");
-            Console.Write($" | Damage - {Damage}");
+            Console.Write($"Health - {Health} | Armor - {Armor} | Damage - {Damage}");
         }
 
         public void TakeDamage(int damage)
@@ -181,8 +166,6 @@ namespace War
             }
 
             bool isExit = false;
-            ConsoleColor defautlColor = ConsoleColor.White;
-            ConsoleColor dieColor = ConsoleColor.Red;
             Console.Write($"             Firs Country             ");
             Console.WriteLine($"             Second Country");
 
@@ -191,17 +174,7 @@ namespace War
             {
                 if (tempFirstCountry.Soldiers.Count > 0)
                 {
-                    if (tempFirstCountry.Soldiers.First().Health > 0)
-                    {
-                        Console.ForegroundColor = defautlColor;
-                        Console.Write($"Health - {tempFirstCountry.Soldiers.First().Health}");
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = dieColor;
-                        Console.Write($"Health - {tempFirstCountry.Soldiers.First().Health}");
-                    }
-                    Console.ForegroundColor = defautlColor;
+                    Console.Write($"Health - {tempFirstCountry.Soldiers.First().Health}");
                     Console.Write($" | Armor - {tempFirstCountry.Soldiers.First().Armor}");
                     Console.Write($" | Damage - {tempFirstCountry.Soldiers.First().Damage}");
                     tempFirstCountry.Soldiers.Remove(tempFirstCountry.Soldiers.First());
@@ -214,17 +187,7 @@ namespace War
                 if (tempSecondCountry.Soldiers.Count > 0)
                 {
                     Console.Write($"   ");
-                    if (tempSecondCountry.Soldiers.First().Health > 0)
-                    {
-                        Console.ForegroundColor = defautlColor;
-                        Console.Write($"Health - {tempSecondCountry.Soldiers.First().Health}");
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = dieColor;
-                        Console.Write($"Health - {tempSecondCountry.Soldiers.First().Health}");
-                    }
-                    Console.ForegroundColor = defautlColor;
+                    Console.Write($"Health - {tempSecondCountry.Soldiers.First().Health}");
                     Console.Write($" | Armor - {tempSecondCountry.Soldiers.First().Armor}");
                     Console.Write($" | Damage - {tempSecondCountry.Soldiers.First().Damage}\n");
                     tempSecondCountry.Soldiers.Remove(tempSecondCountry.Soldiers.First());
