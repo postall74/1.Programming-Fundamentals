@@ -131,8 +131,6 @@ namespace War
                     this.Soldiers.Remove(tempTroop.Soldiers[i]);
                 }
             }
-
-
         }
 
         public void TakeDamage(Troop soldiers)
@@ -141,6 +139,7 @@ namespace War
             Soldier soldierFirstCountry = this.Soldiers.Find(index => index == this.Soldiers[random.Next(this.Soldiers.Count)]);
             System.Threading.Thread.Sleep(3);
             Soldier soldierSecondCountry = soldiers.Soldiers.Find(index => index == soldiers.Soldiers[random.Next(soldiers.Soldiers.Count)]);
+
             if (soldierFirstCountry != null && soldierSecondCountry != null)
             {
                 int damage = soldierSecondCountry.Damage;
@@ -168,7 +167,6 @@ namespace War
             bool isExit = false;
             Console.Write($"             Firs Country             ");
             Console.WriteLine($"             Second Country");
-
 
             while (isExit == false)
             {
