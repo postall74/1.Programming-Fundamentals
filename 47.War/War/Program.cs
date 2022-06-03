@@ -11,41 +11,35 @@ namespace War
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            Troop firstCountry = new Troop();
-            Troop secondCountry = new Troop();
-            bool isExit = false;
-            Troop.Show(firstCountry, secondCountry);
+            Random random = new Random();
+            int minimalCountSolders = 15;
+            int maximalCountSolders = 60;
+            List<Soldier> firstCountrySoldiers = new List<Soldier>();
 
-            while (isExit == false)
+            for (int i = 0; i < random.Next(minimalCountSolders, maximalCountSolders); i++)
             {
-                firstCountry.TakeDamage(secondCountry);
-                firstCountry.Die();
-                secondCountry.TakeDamage(firstCountry);
-                secondCountry.Die();
-
-                if (firstCountry.Soldiers.Count == 0 || secondCountry.Soldiers.Count == 0)
-                {
-                    isExit = true;
-                }
+                firstCountrySoldiers.Add(new Soldier());
+                System.Threading.Thread.Sleep(3);
             }
+            Troop firstCountry = new Troop(firstCountrySoldiers);
+            Console.WriteLine($"First country");
+            firstCountry.Show();
+            List<Soldier> secondCountrySoldiers = new List<Soldier>();
+
+            for (int i = 0; i < random.Next(minimalCountSolders, maximalCountSolders); i++)
+            {
+                secondCountrySoldiers.Add(new Soldier());
+                System.Threading.Thread.Sleep(3);
+            }
+            Troop secondCountry = new Troop(secondCountrySoldiers);
+            Console.WriteLine($"Second country");
+            secondCountry.Show();
+            Battle battle = new Battle();
+            battle.Combat(firstCountry, secondCountry);
             Console.WriteLine("Press any key for know who win");
             Console.ReadKey(true);
             Console.Clear();
-
-            if (firstCountry.Soldiers.Count == 0 && secondCountry.Soldiers.Count == 0)
-            {
-                Console.WriteLine($"Nobody wins this war");
-            }
-            else if (firstCountry.Soldiers.Count == 0)
-            {
-                Console.WriteLine($"This war was won by the second country");
-                secondCountry.Show();
-            }
-            else if (secondCountry.Soldiers.Count == 0)
-            {
-                Console.WriteLine($"This war was won by the first country");
-                firstCountry.Show();
-            }
+            battle.ShowWinner(firstCountry, secondCountry);
             Console.ReadKey(true);
         }
     }
@@ -84,35 +78,14 @@ namespace War
     {
         private List<Soldier> _soldiers;
 
-        public List<Soldier> Soldiers
+        public Troop(List<Soldier> soldiers)
         {
-            get
-            {
-                return _soldiers;
-            }
-            private set
-            {
-                _soldiers = value;
-            }
-        }
-
-        public Troop()
-        {
-            Random random = new Random();
-            int minimalCountSolders = 15;
-            int maximalCountSolders = 60;
-            Soldiers = new List<Soldier>();
-
-            for (int i = 0; i < random.Next(minimalCountSolders, maximalCountSolders); i++)
-            {
-                Soldiers.Add(new Soldier());
-                System.Threading.Thread.Sleep(3);
-            }
+            _soldiers = soldiers;
         }
 
         public void Show()
         {
-            foreach (Soldier soldier in Soldiers)
+            foreach (Soldier soldier in _soldiers)
             {
                 soldier.Show();
                 Console.WriteLine();
@@ -124,21 +97,21 @@ namespace War
         {
             Troop tempTroop = this;
 
-            for (int i = 0; i < tempTroop.Soldiers.Count; i++)
+            for (int i = 0; i < tempTroop._soldiers.Count; i++)
             {
-                if (tempTroop.Soldiers[i].Health < 1)
+                if (tempTroop._soldiers[i].Health < 1)
                 {
-                    this.Soldiers.Remove(tempTroop.Soldiers[i]);
+                    this._soldiers.Remove(tempTroop._soldiers[i]);
                 }
             }
         }
 
-        public void TakeDamage(Troop soldiers)
+        public void TakeDamage(Troop EnemySoldiers)
         {
             Random random = new Random();
-            Soldier soldierFirstCountry = this.Soldiers.Find(index => index == this.Soldiers[random.Next(this.Soldiers.Count)]);
+            Soldier soldierFirstCountry = this._soldiers.Find(index => index == this._soldiers[random.Next(this._soldiers.Count)]);
             System.Threading.Thread.Sleep(3);
-            Soldier soldierSecondCountry = soldiers.Soldiers.Find(index => index == soldiers.Soldiers[random.Next(soldiers.Soldiers.Count)]);
+            Soldier soldierSecondCountry = EnemySoldiers._soldiers.Find(index => index == EnemySoldiers._soldiers[random.Next(EnemySoldiers._soldiers.Count)]);
 
             if (soldierFirstCountry != null && soldierSecondCountry != null)
             {
@@ -147,58 +120,59 @@ namespace War
             }
         }
 
-        public static void Show(Troop firstCountry, Troop secondCountry)
+        public static bool EndBattle(Troop firstCountry, Troop secondCountry)
         {
-            Troop tempFirstCountry = new Troop();
-            tempFirstCountry.Soldiers.Clear();
-            Troop tempSecondCountry = new Troop();
-            tempSecondCountry.Soldiers.Clear();
+            bool isEnd = false;
 
-            foreach (Soldier soldier in firstCountry.Soldiers)
+            if (firstCountry._soldiers.Count == 0 || secondCountry._soldiers.Count == 0)
             {
-                tempFirstCountry.Soldiers.Add(soldier);
+                isEnd = true;
             }
+            return isEnd;
+        }
 
-            foreach (Soldier soldier in secondCountry.Soldiers)
-            {
-                tempSecondCountry.Soldiers.Add(soldier);
-            }
+        public int CountSoldiers()
+        {
+            int count = this._soldiers.Count;
+            return count;
+        }
+    }
 
+    public class Battle
+    {
+        public Battle() { }
+
+        public void Combat(Troop firstCountry, Troop secondCountry)
+        {
             bool isExit = false;
-            Console.Write($"             Firs Country             ");
-            Console.WriteLine($"             Second Country");
 
             while (isExit == false)
             {
-                if (tempFirstCountry.Soldiers.Count > 0)
-                {
-                    Console.Write($"Health - {tempFirstCountry.Soldiers.First().Health}");
-                    Console.Write($" | Armor - {tempFirstCountry.Soldiers.First().Armor}");
-                    Console.Write($" | Damage - {tempFirstCountry.Soldiers.First().Damage}");
-                    tempFirstCountry.Soldiers.Remove(tempFirstCountry.Soldiers.First());
-                }
-                else
-                {
-                    Console.Write($"                                     ");
-                }
+                firstCountry.TakeDamage(secondCountry);
+                firstCountry.Die();
+                secondCountry.TakeDamage(firstCountry);
+                secondCountry.Die();
+                isExit = Troop.EndBattle(firstCountry, secondCountry);
+            }
+        }
 
-                if (tempSecondCountry.Soldiers.Count > 0)
-                {
-                    Console.Write($"   ");
-                    Console.Write($"Health - {tempSecondCountry.Soldiers.First().Health}");
-                    Console.Write($" | Armor - {tempSecondCountry.Soldiers.First().Armor}");
-                    Console.Write($" | Damage - {tempSecondCountry.Soldiers.First().Damage}\n");
-                    tempSecondCountry.Soldiers.Remove(tempSecondCountry.Soldiers.First());
-                }
-                else
-                {
-                    Console.WriteLine();
-                }
-
-                if (tempFirstCountry.Soldiers.Count == 0 && tempSecondCountry.Soldiers.Count == 0)
-                {
-                    isExit = true;
-                }
+        public void ShowWinner(Troop firstCountry, Troop secondCountry)
+        {
+            if (firstCountry.CountSoldiers() == 0 && secondCountry.CountSoldiers() == 0)
+            {
+                Console.WriteLine($"Nobody wins this war");
+            }
+            else if (firstCountry.CountSoldiers() == 0)
+            {
+                Console.WriteLine($"This war was won by the second country");
+                Console.WriteLine($"List of soldiers who are still alive:");
+                secondCountry.Show();
+            }
+            else if (secondCountry.CountSoldiers() == 0)
+            {
+                Console.WriteLine($"This war was won by the first country");
+                Console.WriteLine($"List of soldiers who are still alive:");
+                firstCountry.Show();
             }
         }
     }
