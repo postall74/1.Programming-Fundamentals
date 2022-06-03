@@ -80,7 +80,7 @@ namespace War
         }
     }
 
-    public class Troop : Soldier
+    public class Troop
     {
         private List<Soldier> _soldiers;
 
@@ -110,7 +110,7 @@ namespace War
             }
         }
 
-        new public void Show()
+        public void Show()
         {
             foreach (Soldier soldier in Soldiers)
             {
