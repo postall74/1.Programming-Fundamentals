@@ -63,8 +63,7 @@ namespace Aquarium
             {
                 player.TakeALookAtAquarium(aquarium);
                 string userInput;
-                Console.SetCursorPosition(0, 10);
-                Console.WriteLine($"1.Add a fish to the aquarium\n2.Remove fish from aquarium\n3.Exit\nFor skip time press any key...");
+                Console.WriteLine($"1.Add a fish to the aquarium\n2.Remove fish from aquarium\n3.Remove die fish\n4.Skip the time\n5.Exit");
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -76,11 +75,17 @@ namespace Aquarium
                         player.RemoveFishFromAquarium(aquarium);
                         break;
                     case "3":
+                        player.RemoveDieFish(aquarium);
+                        break;
+                    case "4":
+                        player.SkipTime(aquarium);
+                        break;
+                    case "5":
                         isExit = true;
                         Console.WriteLine("Good bye!");
                         break;
                     default:
-                        Console.WriteLine($"Time skipped");
+                        Console.WriteLine("Retey");
                         break;
                 }
             }
@@ -124,20 +129,25 @@ namespace Aquarium
 
         public void Live()
         {
-            Age++;
+            if (IsDie == false)
+            {
+                Age++;
+            }
         }
 
         public void Show()
         {
-            Console.Write($"Fish title - {Title} | Age - {Age} | ");
+            Console.Write($"Fish title - {Title} | Age - {Age} | Fish status - ");
 
             if (IsDie == false)
             {
-                Console.WriteLine($"Fish status - Alive");
+                Console.WriteLine($"Alive");
             }
             else
             {
-                Console.WriteLine($"Fish status - Die");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Die");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
     }
@@ -229,11 +239,7 @@ namespace Aquarium
         {
             Console.Clear();
 
-            if (CountFishs() == 0)
-            {
-                Console.WriteLine($"The aquarium is empty");
-            }
-            else
+            if (CountFishs() > 0)
             {
                 bool isExit = false;
 
@@ -245,7 +251,7 @@ namespace Aquarium
 
                     if (int.TryParse(Console.ReadLine(), out int fishNumber) == true)
                     {
-                        if (fishNumber < _fishs.Count && fishNumber > 0)
+                        if (fishNumber < _fishs.Count && fishNumber > -1)
                         {
                             _fishs.RemoveAt(fishNumber);
                             isExit = true;
@@ -262,23 +268,43 @@ namespace Aquarium
                         Console.ReadKey(true);
                     }
                 }
+                
+            }
+            else
+            {
+                Console.WriteLine($"The aquarium is empty");
+                Console.ReadKey(true);
             }
         }
 
-        public void DieOrLive()
+        public void Die()
         {
-            for (int i = 0; i < _fishs.Count; i++)
+            foreach (Fish fish in _fishs)
             {
-                if (_fishs[i].IsDie == true)
+                fish.Die();
+            }
+        }
+
+        public void Live()
+        {
+            foreach (Fish fish in _fishs)
+            {
+                fish.Live();
+            }
+        }
+
+        public void RemoveDieFish()
+        {
+            List<Fish> tempFishs = new List<Fish>();
+            
+            foreach (Fish fish in _fishs)
+            {
+                if (fish.IsDie == false)
                 {
-                    _fishs.Remove(_fishs[i]);
-                }
-                else
-                {
-                    _fishs[i].Live();
-                    _fishs[i].Die();
+                    tempFishs.Add(fish);
                 }
             }
+            _fishs = tempFishs;
         }
 
         public int CountFishs()
@@ -296,7 +322,6 @@ namespace Aquarium
         {
             Console.Clear();
             aquarium.Show();
-            aquarium.DieOrLive();
         }
 
         public void AddFishToAquarium(Aquarium aquarium)
@@ -307,6 +332,18 @@ namespace Aquarium
         public void RemoveFishFromAquarium(Aquarium aquarium)
         {
             aquarium.RemoveFish();
+        }
+
+        public void RemoveDieFish(Aquarium aquarium)
+        {
+            aquarium.RemoveDieFish();
+        }
+
+        public void SkipTime(Aquarium aquarium)
+        {
+            aquarium.Live();
+            aquarium.Die();
+            Console.WriteLine($"Time skipped");
         }
     }
 }
