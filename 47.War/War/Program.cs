@@ -166,7 +166,7 @@ namespace War
     }
 
     public class BattleArena
-    { 
+    {
         public BattleArena(Troop soldiersFirstCountry, Troop soldiersSecondCountry)
         {
             Battle battle = new Battle();
