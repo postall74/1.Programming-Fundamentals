@@ -263,7 +263,7 @@ namespace Aquarium
             }
         }
 
-        public void TryToLive()
+        public void LiveFishes()
         {
             foreach (Fish fish in _fishes)
             {
@@ -319,7 +319,7 @@ namespace Aquarium
 
         public void SkipTime()
         {
-            _aquarium.TryToLive();
+            _aquarium.LiveFishes();
             Console.WriteLine($"Time skipped");
         }
     }
