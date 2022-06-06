@@ -93,29 +93,20 @@ namespace Aquarium
 
     public class Fish
     {
-        private readonly Random _random = new Random();
-        private readonly int _minimalAgeAtDeath = 3;
-        private readonly int _maximalAgeAtDeath = 15;
         private readonly int _ageAtDeath;
 
-        public bool IsDie { get; private set; }
+        public bool IsDie => Age >= _ageAtDeath;
         public FishTitle Title { get; private set; }
         public int Age { get; private set; }
 
         public Fish(FishTitle title)
         {
+            Random _random = new Random();
+            int _minimalAgeAtDeath = 3;
+            int _maximalAgeAtDeath = 15;
             Age = 0;
             _ageAtDeath = _random.Next(_minimalAgeAtDeath, _maximalAgeAtDeath);
-            IsDie = false;
             Title = title;
-        }
-
-        public void Die()
-        {
-            if (Age >= _ageAtDeath)
-            {
-                IsDie = true;
-            }
         }
 
         public void Live()
@@ -145,10 +136,23 @@ namespace Aquarium
 
     public class Aquarium
     {
-        private readonly int _capacity;
+        private int _capacity;
         private List<Fish> _fishes;
 
+        public int CountFishes
+        {
+            get
+            {
+                return _fishes.Count;
+            }
+        }
+
         public Aquarium()
+        {
+            Create();
+        }
+
+        private void Create()
         {
             bool isExit = false;
 
@@ -192,13 +196,11 @@ namespace Aquarium
                 {
                     Console.WriteLine($"{i}. Fish - {Enum.GetValues(typeof(FishTitle)).GetValue(i)}");
                 }
-
                 Console.WriteLine($"Select the number of fish to add to the aquarium?");
                 bool isExit = false;
 
                 while (isExit == false)
                 {
-
                     if (int.TryParse(Console.ReadLine(), out int numberTitle) == true)
                     {
                         if (numberTitle > Enum.GetValues(typeof(FishTitle)).Length)
@@ -223,7 +225,7 @@ namespace Aquarium
         {
             Console.Clear();
 
-            if (CountFishs() > 0)
+            if (CountFishes > 0)
             {
                 bool isExit = false;
 
@@ -252,20 +254,12 @@ namespace Aquarium
                         Console.ReadKey(true);
                     }
                 }
-                
+
             }
             else
             {
                 Console.WriteLine($"The aquarium is empty");
                 Console.ReadKey(true);
-            }
-        }
-
-        public void TryToDie()
-        {
-            foreach (Fish fish in _fishes)
-            {
-                fish.Die();
             }
         }
 
@@ -280,7 +274,7 @@ namespace Aquarium
         public void RemoveDieFish()
         {
             List<Fish> tempFishes = new List<Fish>();
-            
+
             foreach (Fish fish in _fishes)
             {
                 if (fish.IsDie == false)
@@ -291,18 +285,13 @@ namespace Aquarium
             _fishes = tempFishes;
         }
 
-        public int CountFishs()
-        {
-            return _fishes.Count;
-        }
-
     }
 
     public class Player
     {
         private Aquarium _aquarium;
 
-        public Player(Aquarium aquarium) 
+        public Player(Aquarium aquarium)
         {
             _aquarium = aquarium;
         }
@@ -331,7 +320,6 @@ namespace Aquarium
         public void SkipTime()
         {
             _aquarium.TryToLive();
-            _aquarium.TryToDie();
             Console.WriteLine($"Time skipped");
         }
     }
