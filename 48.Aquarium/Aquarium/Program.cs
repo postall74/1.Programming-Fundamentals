@@ -8,46 +8,46 @@ namespace Aquarium
 {
     public enum FishTitle : byte
     {
-        anchovy,
-        barracuda,
-        bream,
-        burbot,
-        carp,
-        catfish,
-        cisco,
-        cod,
-        dorado,
-        eel,
-        flounder,
-        grayling,
-        grouper,
-        haddock,
-        hake,
-        halibut,
-        herring,
-        ide,
-        mackerel,
-        mullet,
-        roach,
-        ruffe,
-        perch,
-        pike,
-        pikeperch,
-        piranha,
-        redeye,
-        sardine,
-        salmon,
-        saury,
-        shark,
-        smelt,
-        sprat,
-        sterlet,
-        sturgeon,
-        tilapia,
-        trout,
-        tuna,
-        vobla,
-        whitefish
+        Anchovy,
+        Barracuda,
+        Bream,
+        Burbot,
+        Carp,
+        Catfish,
+        Cisco,
+        Cod,
+        Dorado,
+        Eel,
+        Flounder,
+        Grayling,
+        Grouper,
+        Haddock,
+        Hake,
+        Halibut,
+        Herring,
+        Ide,
+        Mackerel,
+        Mullet,
+        Roach,
+        Ruffe,
+        Perch,
+        Pike,
+        Pikeperch,
+        Piranha,
+        Redeye,
+        Sardine,
+        Salmon,
+        Saury,
+        Shark,
+        Smelt,
+        Sprat,
+        Sterlet,
+        Sturgeon,
+        Tilapia,
+        Trout,
+        Tuna,
+        Vobla,
+        Whitefish
     }
 
     internal class Program
@@ -55,13 +55,12 @@ namespace Aquarium
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            Aquarium aquarium = new Aquarium();
-            Player player = new Player();
+            Player player = new Player(new Aquarium());
             bool isExit = false;
 
             while (isExit == false)
             {
-                player.TakeALookAtAquarium(aquarium);
+                player.TakeLookAquarium();
                 string userInput;
                 Console.WriteLine($"1.Add a fish to the aquarium\n2.Remove fish from aquarium\n3.Remove die fish\n4.Skip the time\n5.Exit");
                 userInput = Console.ReadLine();
@@ -69,20 +68,20 @@ namespace Aquarium
                 switch (userInput)
                 {
                     case "1":
-                        player.AddFishToAquarium(aquarium);
+                        player.AddFishToAquarium();
                         break;
                     case "2":
-                        player.RemoveFishFromAquarium(aquarium);
+                        player.RemoveFishFromAquarium();
                         break;
                     case "3":
-                        player.RemoveDieFish(aquarium);
+                        player.RemoveDieFish();
                         break;
                     case "4":
-                        player.SkipTime(aquarium);
+                        player.SkipTime();
                         break;
                     case "5":
                         isExit = true;
-                        Console.WriteLine("Good bye!");
+                        Console.WriteLine("\nGood bye!");
                         break;
                     default:
                         Console.WriteLine("Retey");
@@ -97,19 +96,11 @@ namespace Aquarium
         private readonly Random _random = new Random();
         private readonly int _minimalAgeAtDeath = 3;
         private readonly int _maximalAgeAtDeath = 15;
-        private int _ageAtDeath;
+        private readonly int _ageAtDeath;
 
         public bool IsDie { get; private set; }
         public FishTitle Title { get; private set; }
         public int Age { get; private set; }
-
-        public Fish()
-        {
-            Age = 0;
-            _ageAtDeath = _random.Next(_minimalAgeAtDeath, _maximalAgeAtDeath);
-            IsDie = false;
-            Title = (FishTitle)Enum.GetValues(typeof(FishTitle)).GetValue(_random.Next(Enum.GetValues(typeof(FishTitle)).Length));
-        }
 
         public Fish(FishTitle title)
         {
@@ -154,12 +145,11 @@ namespace Aquarium
 
     public class Aquarium
     {
-        private List<Fish> _fishs;
-        private int _maximumNumberFishInAquarium;
+        private readonly int _capacity;
+        private List<Fish> _fishes;
 
         public Aquarium()
         {
-            Random random = new Random();
             bool isExit = false;
 
             while (isExit == false)
@@ -167,15 +157,9 @@ namespace Aquarium
                 Console.Clear();
                 Console.Write($"How many fish can live in an aquarium? - ");
 
-                if (int.TryParse(Console.ReadLine(), out _maximumNumberFishInAquarium) == true)
+                if (int.TryParse(Console.ReadLine(), out _capacity) == true)
                 {
-                    _fishs = new List<Fish>(_maximumNumberFishInAquarium);
-
-                    for (int i = 0; i < random.Next(_maximumNumberFishInAquarium); i++)
-                    {
-                        _fishs.Add(new Fish());
-                        System.Threading.Thread.Sleep(3);
-                    }
+                    _fishes = new List<Fish>(_capacity);
                     isExit = true;
                 }
                 else
@@ -188,12 +172,12 @@ namespace Aquarium
 
         public void Show()
         {
-            Console.WriteLine($"Now in the aquarium lives {_fishs.Count} fish from {_maximumNumberFishInAquarium}. Below is a list of them:");
+            Console.WriteLine($"Now in the aquarium lives {_fishes.Count} fish from {_capacity}. Below is a list of them:");
 
-            for (int i = 0; i < _fishs.Count; i++)
+            for (int i = 0; i < _fishes.Count; i++)
             {
                 Console.Write($"{i}. ");
-                _fishs[i].Show();
+                _fishes[i].Show();
             }
             Console.WriteLine();
         }
@@ -202,7 +186,7 @@ namespace Aquarium
         {
             Console.Clear();
 
-            if (_fishs.Count < _maximumNumberFishInAquarium)
+            if (_fishes.Count < _capacity)
             {
                 for (int i = 0; i < Enum.GetValues(typeof(FishTitle)).Length; i++)
                 {
@@ -223,7 +207,7 @@ namespace Aquarium
                         }
                         else
                         {
-                            _fishs.Add(new Fish((FishTitle)numberTitle));
+                            _fishes.Add(new Fish((FishTitle)numberTitle));
                             isExit = true;
                         }
                     }
@@ -251,9 +235,9 @@ namespace Aquarium
 
                     if (int.TryParse(Console.ReadLine(), out int fishNumber) == true)
                     {
-                        if (fishNumber < _fishs.Count && fishNumber > -1)
+                        if (fishNumber < _fishes.Count && fishNumber > -1)
                         {
-                            _fishs.RemoveAt(fishNumber);
+                            _fishes.RemoveAt(fishNumber);
                             isExit = true;
                         }
                         else
@@ -277,17 +261,17 @@ namespace Aquarium
             }
         }
 
-        public void Die()
+        public void TryToDie()
         {
-            foreach (Fish fish in _fishs)
+            foreach (Fish fish in _fishes)
             {
                 fish.Die();
             }
         }
 
-        public void Live()
+        public void TryToLive()
         {
-            foreach (Fish fish in _fishs)
+            foreach (Fish fish in _fishes)
             {
                 fish.Live();
             }
@@ -295,54 +279,59 @@ namespace Aquarium
 
         public void RemoveDieFish()
         {
-            List<Fish> tempFishs = new List<Fish>();
+            List<Fish> tempFishes = new List<Fish>();
             
-            foreach (Fish fish in _fishs)
+            foreach (Fish fish in _fishes)
             {
                 if (fish.IsDie == false)
                 {
-                    tempFishs.Add(fish);
+                    tempFishes.Add(fish);
                 }
             }
-            _fishs = tempFishs;
+            _fishes = tempFishes;
         }
 
         public int CountFishs()
         {
-            return _fishs.Count;
+            return _fishes.Count;
         }
 
     }
 
     public class Player
     {
-        public Player() { }
+        private Aquarium _aquarium;
 
-        public void TakeALookAtAquarium(Aquarium aquarium)
+        public Player(Aquarium aquarium) 
+        {
+            _aquarium = aquarium;
+        }
+
+        public void TakeLookAquarium()
         {
             Console.Clear();
-            aquarium.Show();
+            _aquarium.Show();
         }
 
-        public void AddFishToAquarium(Aquarium aquarium)
+        public void AddFishToAquarium()
         {
-            aquarium.AddFish();
+            _aquarium.AddFish();
         }
 
-        public void RemoveFishFromAquarium(Aquarium aquarium)
+        public void RemoveFishFromAquarium()
         {
-            aquarium.RemoveFish();
+            _aquarium.RemoveFish();
         }
 
-        public void RemoveDieFish(Aquarium aquarium)
+        public void RemoveDieFish()
         {
-            aquarium.RemoveDieFish();
+            _aquarium.RemoveDieFish();
         }
 
-        public void SkipTime(Aquarium aquarium)
+        public void SkipTime()
         {
-            aquarium.Live();
-            aquarium.Die();
+            _aquarium.TryToLive();
+            _aquarium.TryToDie();
             Console.WriteLine($"Time skipped");
         }
     }
