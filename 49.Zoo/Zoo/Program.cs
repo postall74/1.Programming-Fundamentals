@@ -60,7 +60,7 @@ namespace Zoo
                 switch (userInput)
                 {
                     case "1":
-                        player.TakeInfoAviary(zoo);
+                        player.TakeInfoAviaries(zoo);
                         break;
                     case "2":
                         isExit = true;
@@ -160,9 +160,8 @@ namespace Zoo
                 Console.WriteLine($"{i}. Description - {_aviaries[i].Descriprion}");
             }
             Console.Write($"\nChoose the aviary you want to go to - ");
-            int aviaryIndex;
 
-            if (int.TryParse(Console.ReadLine(), out aviaryIndex) == true)
+            if (int.TryParse(Console.ReadLine(), out int aviaryIndex) == true)
             {
                 if (aviaryIndex < _aviaries.Count && aviaryIndex > -1)
                 {
@@ -177,7 +176,6 @@ namespace Zoo
             { 
                 Console.WriteLine($"Retry"); 
             }
-
         }
     }
 
@@ -185,7 +183,7 @@ namespace Zoo
     {
         public Player() { }
 
-        public void TakeInfoAviary(Zoo zoo)
+        public void TakeInfoAviaries(Zoo zoo)
         {
             zoo.ShowAviary();
         }
