@@ -41,33 +41,28 @@ namespace Zoo
                 new Wolf ("Shiru","female"),
                 new Wolf ("Luve","female")
             };
-            Aviary firstAviary = new Aviary(tigers, "Large aviary that contains wild cats");
-            Aviary secondAviary = new Aviary(bears, "A very large area where bears can safely walk, separated by protective glass");
-            Aviary thirdAviary = new Aviary(apes, "A huge cage in which a flock of chimpanzees lives");
-            Aviary fourthAviary = new Aviary(wolves, "Large pen for wolves");
+            List<Aviary> aviaries = new List<Aviary>
+            {
+                new Aviary(tigers, "Large aviary that contains wild cats"),
+                new Aviary(bears, "A very large area where bears can safely walk, separated by protective glass"),
+                new Aviary(apes, "A huge cage in which a flock of chimpanzees lives"),
+                new Aviary(wolves, "Large pen for wolves")
+            };
+            Zoo zoo = new Zoo(aviaries);
             Player player = new Player();
 
             while (isExit == false)
             {
                 Console.Clear();
-                Console.WriteLine($"1.Go see the first aviary\n2.Go see the second aviary\n3.Go see the third aviary\n4.Go see the fourth aviary\n5.Go away\n");
+                Console.WriteLine($"1.Go see the aviaries\n2.Go away\n");
                 string userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
-                        player.TakeInfoAviary(firstAviary);
+                        player.TakeInfoAviary(zoo);
                         break;
                     case "2":
-                        player.TakeInfoAviary(secondAviary);
-                        break;
-                    case "3":
-                        player.TakeInfoAviary(thirdAviary);
-                        break;
-                    case "4":
-                        player.TakeInfoAviary(fourthAviary);
-                        break;
-                    case "5":
                         isExit = true;
                         Console.WriteLine($"Good bye!");
                         break;
@@ -136,7 +131,6 @@ namespace Zoo
         public void Show()
         {
             Console.Clear();
-            Console.WriteLine($"Description - {Descriprion}");
             Console.WriteLine($"Animals item - {_animals.First().GetType().Name}");
             Console.WriteLine($"Count animals in aviary - {_animals.Count}");
             foreach (Animal animal in _animals)
@@ -148,13 +142,52 @@ namespace Zoo
         }
     }
 
+    public class Zoo
+    {
+        private List<Aviary> _aviaries;
+
+        public Zoo(List<Aviary> aviaries)
+        {
+            _aviaries = aviaries;
+        }
+
+        public void ShowAviary()
+        {
+            Console.Clear();
+
+            for (int i = 0; i < _aviaries.Count; i++)
+            {
+                Console.WriteLine($"{i}. Description - {_aviaries[i].Descriprion}");
+            }
+            Console.Write($"\nChoose the aviary you want to go to - ");
+            int aviaryIndex;
+
+            if (int.TryParse(Console.ReadLine(), out aviaryIndex) == true)
+            {
+                if (aviaryIndex < _aviaries.Count && aviaryIndex > -1)
+                {
+                    _aviaries[aviaryIndex].Show();
+                }
+                else
+                {
+                    Console.WriteLine($"Retry");
+                }
+            }
+            else
+            { 
+                Console.WriteLine($"Retry"); 
+            }
+
+        }
+    }
+
     public class Player
     {
         public Player() { }
 
-        public void TakeInfoAviary(Aviary aviary)
+        public void TakeInfoAviary(Zoo zoo)
         {
-            aviary.Show();
+            zoo.ShowAviary();
         }
     }
 }
