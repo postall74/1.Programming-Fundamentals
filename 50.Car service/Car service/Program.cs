@@ -8,23 +8,23 @@ namespace Car_service
 {
     public enum PartNumber
     {
-        Бампер,
-        Проводка,
-        Шланги,
-        Сцепление,
-        Тормоза,
-        Трансмиссия,
-        Зеркала,
-        Окна,
-        Экстерьер,
-        Каркас,
-        Сиденья,
-        Кондиционер,
-        Дворники,
-        Шасси,
-        Подвеска,
-        Двигатель,
-        Радиатор
+        Bumper,
+        Wiring,
+        Hoses,
+        Clutch,
+        brakes,
+        Transmission,
+        mirrors,
+        Window,
+        Exterior,
+        frame,
+        seats,
+        AirConditioner,
+        wipers,
+        Chassis,
+        Suspension,
+        Engine,
+        Radiator
     }
 
     internal class Program
@@ -42,7 +42,8 @@ namespace Car_service
                 Console.WriteLine($"Number of clients in the queue - {carsCount}");
                 carService.ShowAmountMoney();
                 warehouse.ShowInfoDetails();
-                carService.ShowRepairInvoice(car);
+                car.Show();
+                carService.ShowRepairInvoice(car.BreakeDetail);
                 carService.TakeCarForRepair(car);
                 carsCount--;
             }
@@ -54,7 +55,6 @@ namespace Car_service
     {
         public PartNumber PartNumber { get; private set; }
         public int Price { get; private set; }
-        public int Count { get; private set; }
 
         public Detail()
         {
@@ -73,32 +73,59 @@ namespace Car_service
         }
     }
 
+    public class Cell
+    { 
+        public Detail Detail { get; private set; }
+        public int Count { get; private set; }
+
+        public Cell()
+        {
+            this.Detail = new Detail();
+            Count = CreateCountDetail();
+        }
+
+        public void Remove()
+        {
+            Count--;
+        }
+
+        public void Show()
+        {
+            Detail.Show();
+            Console.Write($"Count - {Count}\t\n");
+        }
+
+        private int CreateCountDetail()
+        {
+            Random random = new Random();
+            int minimalCount = 3;
+            int maximumCount = 8;
+            int count = random.Next(minimalCount, maximumCount);
+            System.Threading.Thread.Sleep(2);
+            return count;
+        }
+
+    }
+
     public class Warehouse
     {
-        private Dictionary<Detail, int> _details;
+        private List<Cell> _details;
 
         public Warehouse()
         {
-            _details = new Dictionary<Detail, int>();
-            List<Detail> details = new List<Detail>();
+            _details = new List<Cell>();
 
             for (int i = 0; i < Enum.GetValues(typeof(PartNumber)).Length; i++)
             {
-                details.Add(new Detail());
-            }
-
-            foreach (Detail detail in details)
-            {
-                _details.Add(detail, CreateCountDetail());
+                _details.Add(new Cell());
             }
         }
 
         public void ShowInfoDetails()
         {
-            for (int i = 0; i < _details.Keys.Count; i++)
+            foreach (Cell detail in _details)
             {
-                _details.Keys.ToArray()[i].Show();
-                Console.WriteLine($"Count - {_details.Values.ToArray()[i]}\t");
+                detail.Show();
             }
         }
 
@@ -108,7 +135,7 @@ namespace Car_service
 
             for (int i = 0; i < _details.Count; i++)
             {
-                if (partNumber == _details.Keys.ToArray()[i].PartNumber)
+                if (partNumber == _details[i].Detail.PartNumber)
                 {
                     isFound = true;
                 }
@@ -120,14 +147,14 @@ namespace Car_service
         {
             for (int i = 0; i < _details.Count; i++)
             {
-                if (_details.Keys.ToArray()[i].PartNumber == partNumber)
+                if (_details.ToArray()[i].Detail.PartNumber == partNumber)
                 {
-                    _details[_details.Keys.ToArray()[i]] = _details.Values.ToArray()[i] - 1;
+                    _details[i].Remove();
                 }
 
-                if (_details.Values.ToArray()[i] == 0)
+                if (_details[i].Count == 0)
                 {
-                    _details.Remove(_details.Keys.ToArray()[i]);
+                    _details.RemoveAt(i);
                 }
             }
         }
@@ -136,23 +163,12 @@ namespace Car_service
         {
             for (int i = 0; i < _details.Count; i++)
             {
-                if (partNumber == _details.Keys.ToArray()[i].PartNumber)
+                if (partNumber == _details[i].Detail.PartNumber)
                 {
-                    int cost = _details.Values.ToArray()[i];
-                    return cost;
+                    return _details[i].Count; 
                 }
             }
             return 0;
-        }
-
-        private int CreateCountDetail()
-        {
-            Random random = new Random();
-            int minimalCount = 3;
-            int maximumCount = 8;
-            int count = random.Next(minimalCount, maximumCount);
-            System.Threading.Thread.Sleep(2);
-            return count;
         }
     }
 
@@ -188,11 +204,9 @@ namespace Car_service
             }
         }
 
-        public void ShowRepairInvoice(Car car)
+        public void ShowRepairInvoice(PartNumber partNumber)
         {
-            car.Show();
-            Console.WriteLine($"\nRepair will cost {RepairCost(car)}, where {_warehouse.CostDetail(car.BreakeDetail)} is the cost of the {car.BreakeDetail}" +
-                $" part and {CostWork} is the cost of labor");
+            Console.WriteLine($"\nThe cost of the '{partNumber}' part {_warehouse.CostDetail(partNumber)} and {CostWork} is the cost of labor");
             Console.ReadKey(true);
         }
 
@@ -203,6 +217,7 @@ namespace Car_service
             if (car.Pay(RepairCost(car)) == 0)
             {
                 Console.WriteLine($"The client does not have enough money to pay for parts and labor.");
+                Console.ReadKey(true);
                 isPay = false;
                 return isPay;
             }
@@ -232,6 +247,7 @@ namespace Car_service
                     isRepair = false;
                     Console.WriteLine($"This part is not in stock, we cannot repair this car. We pay a penalty in the amount of work " +
                     $"and return the money for the spare part.");
+                    Console.ReadKey(true);
                 }
             }
             return isRepair;
@@ -265,10 +281,11 @@ namespace Car_service
             Money = random.Next(maximumMoney);
         }
 
-        public void Show()
+        public Car Show()
         {
             Console.Write($"\nThis car has a broken part - {BreakeDetail}\n");
             Console.Write($"This client has {Money} money\n");
+            return this;
         }
 
         public int Pay(int repairCost)
@@ -285,4 +302,3 @@ namespace Car_service
         }
     }
 }
-
