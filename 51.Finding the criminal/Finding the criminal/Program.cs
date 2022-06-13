@@ -73,27 +73,30 @@ namespace Finding_the_criminal
         {
             List<Criminal> criminals = new List<Criminal>();
             bool isExit = false;
-            Console.Clear();
 
             while (isExit == false)
             {
+                Console.Clear();
                 Console.Write($"Enter height - ");
 
                 if (int.TryParse(Console.ReadLine(), out int growth) == true)
                 {
-                    criminals = SearchByGrowth(growth);
                     Console.Write($"Enter weight - ");
 
                     if (int.TryParse(Console.ReadLine(), out int weight) == true)
                     {
-                        criminals.Union(SearchByWeight(weight));
                         Console.Write($"Enter nationality - ");
-                        criminals.Union(SearchByNationality(Console.ReadLine()));
-                        criminals.Distinct();
+                        string nationality = Console.ReadLine();
+                        criminals = _criminals.Where(_criminals =>
+                        _criminals.Growth == growth &&
+                        _criminals.Weight == weight &&
+                        _criminals.Nationality == nationality &&
+                        _criminals.IsIncarcerated == false).ToList();
 
                         foreach (Criminal criminal in criminals)
                         {
-                            Console.WriteLine($"Name - {criminal.FullName} | Growth - {criminal.Growth} | Weight - {criminal.Weight} | Nationality - {criminal.Nationality}");
+                            Console.WriteLine($"Name - {criminal.FullName} | Growth - {criminal.Growth} | Weight - {criminal.Weight} | " +
+                                $"Nationality - {criminal.Nationality}");
                         }
                         isExit = true;
                     }
@@ -108,21 +111,6 @@ namespace Finding_the_criminal
                 }
             }
             return criminals;
-        }
-
-        private List<Criminal> SearchByGrowth(int growth)
-        {
-            return _criminals.Where(_criminals => _criminals.Growth == growth && _criminals.IsIncarcerated == false).ToList();
-        }
-
-        private List<Criminal> SearchByWeight(int weight)
-        {
-            return _criminals.Where(_criminals => _criminals.Weight == weight && _criminals.IsIncarcerated == false).ToList();
-        }
-
-        private List<Criminal> SearchByNationality(string nationality)
-        {
-            return _criminals.Where(_criminals => _criminals.Nationality == nationality && _criminals.IsIncarcerated == false).ToList();
         }
     }
 }
