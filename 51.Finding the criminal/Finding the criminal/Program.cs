@@ -38,31 +38,25 @@ namespace Finding_the_criminal
                 new Criminal("Julius Streicher",true,164,55,"Баварец")
             };
             Detective detective = new Detective(criminals);
-            detective.FindingCriminal();
+            detective.SearchCriminals();
         }
     }
 
     public class Criminal
     {
-        private string _fullName;
-        private bool _isIncarcerated;
-        private int _growth;
-        private int _weight;
-        private string _nationality;
-
-        public string FullName { get { return _fullName; } }
-        public bool IsIncarcerated { get { return _isIncarcerated; } }
-        public int Growth { get { return _growth; } }
-        public int Weight { get { return _weight; } }
-        public string Nationality { get { return _nationality; } }
+        public string FullName { get; private set; }
+        public bool IsIncarcerated { get; private set; }
+        public int Growth { get; private set; }
+        public int Weight { get; private set; }
+        public string Nationality { get; private set; }
 
         public Criminal(string fullName, bool isIincarcerated, int growth, int weight, string nationality)
         {
-            _fullName = fullName;
-            _isIncarcerated = isIincarcerated;
-            _growth = growth;
-            _weight = weight;
-            _nationality = nationality;
+            FullName = fullName;
+            IsIncarcerated = isIincarcerated;
+            Growth = growth;
+            Weight = weight;
+            Nationality = nationality;
         }
     }
 
@@ -75,9 +69,9 @@ namespace Finding_the_criminal
             _criminals = criminals;
         }
 
-        public List<Criminal> FindingCriminal()
+        public List<Criminal> SearchCriminals()
         {
-            List<Criminal> result = new List<Criminal>();
+            List<Criminal> criminals = new List<Criminal>();
             bool isExit = false;
             Console.Clear();
 
@@ -87,19 +81,19 @@ namespace Finding_the_criminal
 
                 if (int.TryParse(Console.ReadLine(), out int growth) == true)
                 {
-                    result = SearchByGrowth(growth);
+                    criminals = SearchByGrowth(growth);
                     Console.Write($"Enter weight - ");
 
                     if (int.TryParse(Console.ReadLine(), out int weight) == true)
                     {
-                        result.Union(SearchByWeight(weight));
+                        criminals.Union(SearchByWeight(weight));
                         Console.Write($"Enter nationality - ");
-                        result.Union(SearchByNationality(Console.ReadLine()));
-                        result.Distinct();
+                        criminals.Union(SearchByNationality(Console.ReadLine()));
+                        criminals.Distinct();
 
-                        foreach (var item in result)
+                        foreach (Criminal criminal in criminals)
                         {
-                            Console.WriteLine($"Name - {item.FullName} | Growth - {item.Growth} | Weight - {item.Weight} | Nationality - {item.Nationality}");
+                            Console.WriteLine($"Name - {criminal.FullName} | Growth - {criminal.Growth} | Weight - {criminal.Weight} | Nationality - {criminal.Nationality}");
                         }
                         isExit = true;
                     }
@@ -113,28 +107,22 @@ namespace Finding_the_criminal
                     Console.WriteLine($"Retry");
                 }
             }
-            return result;
+            return criminals;
         }
 
         private List<Criminal> SearchByGrowth(int growth)
         {
-            List<Criminal> result = new List<Criminal>();
-            result = _criminals.Where(_criminals => _criminals.Growth == growth).Where(_criminals => _criminals.IsIncarcerated == false).ToList();
-            return result;
+            return _criminals.Where(_criminals => _criminals.Growth == growth && _criminals.IsIncarcerated == false).ToList();
         }
 
         private List<Criminal> SearchByWeight(int weight)
         {
-            List<Criminal> result = new List<Criminal>();
-            result = _criminals.Where(_criminals => _criminals.Weight == weight).Where(_criminals => _criminals.IsIncarcerated == false).ToList();
-            return result;
+            return _criminals.Where(_criminals => _criminals.Weight == weight && _criminals.IsIncarcerated == false).ToList();
         }
 
         private List<Criminal> SearchByNationality(string nationality)
         {
-            List<Criminal> result = new List<Criminal>();
-            result = _criminals.Where(_criminals => _criminals.Nationality == nationality).Where(_criminals => _criminals.IsIncarcerated == false).ToList();
-            return result;
+            return _criminals.Where(_criminals => _criminals.Nationality == nationality && _criminals.IsIncarcerated == false).ToList();
         }
     }
 }
