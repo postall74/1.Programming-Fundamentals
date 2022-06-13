@@ -98,18 +98,9 @@ namespace Arms_report
 
         public void TakeSoldiers(List<Soldier> soldiers)
         {
-            List<Soldier> transferredSoldiers;
-            transferredSoldiers = _soldiers.Where(_soldiers => _soldiers.Surname.ToUpper().StartsWith("Б")).ToList();
-
-            foreach (Soldier soldier in transferredSoldiers)
-            {
-                soldiers.Add(soldier);
-            }
-
-            foreach (Soldier soldier in transferredSoldiers)
-            {
-                _soldiers.Remove(soldier);
-            }
+            List<Soldier> transferredSoldiers = _soldiers.Where(_soldiers => _soldiers.Surname.ToUpper().StartsWith("Б")).ToList();
+            _soldiers = _soldiers.Except(transferredSoldiers).ToList();
+            soldiers.AddRange(transferredSoldiers);
         }
     }
 }
