@@ -53,7 +53,7 @@ namespace Arms_report
             Console.WriteLine("Platoon B");
             platoonB.Show();
             Console.WriteLine("Transfer soldiers from platoonA to platoonB");
-            platoonA.TakeSoldiers(soldiersPlatoonB);
+            platoonB.TakeSoldiers(platoonA.GiveSoldiers(soldiersPlatoonB));
             Console.WriteLine("Platoon A");
             platoonA.Show();
             Console.WriteLine("Platoon B");
@@ -96,11 +96,16 @@ namespace Arms_report
             }
         }
 
-        public void TakeSoldiers(List<Soldier> soldiers)
+        public List<Soldier> GiveSoldiers(List<Soldier> soldiers)
         {
             List<Soldier> transferredSoldiers = _soldiers.Where(_soldiers => _soldiers.Surname.ToUpper().StartsWith("Б")).ToList();
             _soldiers = _soldiers.Except(transferredSoldiers).ToList();
-            soldiers.AddRange(transferredSoldiers);
+            return transferredSoldiers;
+        }
+
+        public void TakeSoldiers(List<Soldier> soldiers)
+        {
+            _soldiers = _soldiers.Union(soldiers).ToList();
         }
     }
 }
