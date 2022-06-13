@@ -83,10 +83,7 @@ namespace Top_server_players
 
         public void ShowAllPlayers()
         {
-            foreach (Player player in _players)
-            {
-                player.Show();
-            }
+            Show(_players);
         }
 
         public void ShowTopThreeLevelPlayers()
@@ -96,11 +93,7 @@ namespace Top_server_players
             topThreePlayers = _players.OrderByDescending(_players => _players.Level).ToList();
             topThreePlayers.RemoveRange(countTopPlayers, topThreePlayers.Count - countTopPlayers);
             Console.WriteLine($"Top three players on the server with the highest level:");
-
-            foreach (Player player in topThreePlayers)
-            {
-                player.Show();
-            }
+            Show(topThreePlayers);
         }
 
         public void ShowTopThreeStrngthPlayers()
@@ -110,8 +103,12 @@ namespace Top_server_players
             topThreePlayers = _players.OrderByDescending(_players => _players.Strength).ToList();
             topThreePlayers.RemoveRange(countTopPlayers, topThreePlayers.Count - countTopPlayers);
             Console.WriteLine($"Top three players on the server with the most power:");
+            Show(topThreePlayers);
+        }
 
-            foreach (Player player in topThreePlayers)
+        private void Show(List<Player> players)
+        {
+            foreach (Player player in players)
             {
                 player.Show();
             }
